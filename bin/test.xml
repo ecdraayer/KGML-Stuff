@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<pathway>
+    <entry id="13" name="ko:K01623 ko:K01624 ko:K01622 ko:K11645 ko:K16305 ko:K16306" type="ortholog" reaction="rn:R01070"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K01623+K01624+K01622+K11645+K16305+K16306">
+    </entry>
+</pathway>

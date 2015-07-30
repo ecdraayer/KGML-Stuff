@@ -11,7 +11,7 @@ public class ParseFasta {
 	ArrayList<String> sequences = new ArrayList<String>();
 	String file;
 	public ParseFasta( String File) {
-		file=File;
+		this.file=File;
 		try {
 			Readfromfile();
 		} catch (FileNotFoundException e) {

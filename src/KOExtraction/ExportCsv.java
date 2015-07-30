@@ -14,7 +14,7 @@ public class ExportCsv {
 	private FileWriter fileWriter = null;
 	public ExportCsv (String Fname, boolean contd)
 	{
-		Filename=Fname;
+		this.Filename=Fname;
 		
 		try {
 			fileWriter = new FileWriter(Filename,contd);
@@ -34,6 +34,7 @@ public class ExportCsv {
 		}
 		else
 		{
+			Field = Field.replace(",","-");
 			fileWriter.append(Field);
 			fileWriter.append(COMMA_DELIMITER);
 

@@ -16,11 +16,9 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.base.Function;
-
 public class BlastSearch {
 	ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
-	String Sequence;
+	private String Sequence;
 	public BlastSearch ()
 	{
 		

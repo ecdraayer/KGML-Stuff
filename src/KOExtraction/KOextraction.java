@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class KOextraction {
 
 	public static void main(String[] args) {
-		
+			
 		String fastaname="";
 		String output="";
 		String k="10";

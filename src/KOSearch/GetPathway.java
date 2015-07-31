@@ -18,19 +18,30 @@ public class GetPathway {
 		ArrayList<ArrayList<String>> table  = new ArrayList<ArrayList<String>>();
 		
 		driver.get("http://www.genome.jp/dbget-bin/www_bget?ko:" + KONumber);
-		WebElement form = driver.findElement(By.name("form1"));
-		List<WebElement> tables = form.findElements(By.tagName("table"));
-		List<WebElement> trs = tables.get(3).findElements(By.tagName("tr"));
 		
-		int i=0;
-		for (WebElement tr : trs)
-		{	
+		//check if pathway exists	
+		
+		List<WebElement> pathway = driver.findElements(By.partialLinkText("KEGG PATHWAY"));
+		
+		if (pathway.size()>0)
+		{
+			WebElement form = driver.findElement(By.name("form1"));
+			List<WebElement> tables = form.findElements(By.tagName("table"));		
+			List<WebElement> trs = tables.get(3).findElements(By.tagName("tr"));
 			
-			WebElement a =  tr.findElement(By.tagName("a"));
-			table.add(new ArrayList<String>());
-			table.get(i).add(tr.getText().trim().replace("\n","- "));
-			table.get(i).add(a.getAttribute("href"));			
-			i++;
+			
+			
+			int i=0;
+			for (WebElement tr : trs)
+			{	
+				
+				WebElement a =  tr.findElement(By.tagName("a"));
+				table.add(new ArrayList<String>());
+				table.get(i).add(tr.getText().trim().replace("\n","- "));
+				table.get(i).add(a.getAttribute("href"));			
+				i++;
+			}
+			
 		}
 		return table;
 

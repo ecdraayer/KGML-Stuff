@@ -33,6 +33,7 @@ public class KOextraction {
 				}
 				if (args[j].equals("-c"))
 				{
+					//option to indicate on which index to restart the program
 					if (args[j+1].contains("-")==false)
 					{
 						c=Integer.parseInt(args[j+1]);
@@ -59,7 +60,7 @@ public class KOextraction {
 		       
 		        
 				BlastSearch Bsearch = new BlastSearch();
-				ExportCsv Csv = new ExportCsv(output, contd);
+				ExportCsv Csv = new ExportCsv(output, contd,"Sequence id,Sequence Description,gene_KO_number,organism id");
 				
 		        for (int i=c; i < fasta.sequences.size() ; i++)
 		        {

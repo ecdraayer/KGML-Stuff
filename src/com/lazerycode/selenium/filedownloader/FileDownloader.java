@@ -42,7 +42,7 @@ public class FileDownloader {
  
     //private static final Logger LOG = Logger.getLogger(FileDownloader.class);
     private WebDriver driver;
-    private String localDownloadPath = System.getProperty("java.io.tmpdir");
+    private String localDownloadPath = System.getProperty("user.dir") ;
     private boolean followRedirects = true;
     private boolean mimicWebDriverCookieState = true;
     private int httpStatusOfLastDownloadAttempt = 0;
@@ -85,8 +85,8 @@ public class FileDownloader {
      * @return
      * @throws Exception
      */
-    public String downloadFile(WebElement element) throws Exception {
-        return downloader(element, "href");
+    public String downloadFile(WebElement element, String Filename) throws Exception {
+        return downloader(element, "href", Filename);
     }
  
     /**
@@ -96,8 +96,8 @@ public class FileDownloader {
      * @return
      * @throws Exception
      */
-    public String downloadImage(WebElement element) throws Exception {
-        return downloader(element, "src");
+    public String downloadImage(WebElement element,String Filename) throws Exception {
+        return downloader(element, "src", Filename) ;
     }
  
     /**
@@ -149,12 +149,15 @@ public class FileDownloader {
      * @throws IOException
      * @throws NullPointerException
      */
-    private String downloader(WebElement element, String attribute) throws IOException, NullPointerException, URISyntaxException {
+    private String downloader(WebElement element, String attribute, String Filename) throws IOException, NullPointerException, URISyntaxException {
         String fileToDownloadLocation = element.getAttribute(attribute);
         if (fileToDownloadLocation.trim().equals("")) throw new NullPointerException("The element you have specified does not link to anything!");
  
         URL fileToDownload = new URL(fileToDownloadLocation);
-        File downloadedFile = new File(this.localDownloadPath + fileToDownload.getFile().replaceFirst("/|\\\\", ""));
+        //changed by Raul
+        File downloadedFile = new File(this.localDownloadPath + "/data/" + Filename.replace("/", "-"));
+        		//+ " fileToDownload.getFile().replaceFirst("/|\\\\", "").replace("?", ""));
+     
         if (downloadedFile.canWrite() == false) downloadedFile.setWritable(true);
  
         HttpClient client = new DefaultHttpClient();

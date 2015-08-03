@@ -3,6 +3,7 @@ package KOSearch;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +19,7 @@ public class KOSearch {
 
 	public static void main(String[] args) {
 		
-	     ReadCSV CSV = new ReadCSV("Seq_KO.csv");
+	     ReadCSV CSV = new ReadCSV("data/csv/Seq_KO.csv");
 	     GetPathway Pathway = new GetPathway();
 	     ArrayList<String> KOnums = new ArrayList<String>();
 	     ArrayList<ArrayList<String>> Pathways = new ArrayList<ArrayList<String>>();
@@ -28,20 +29,9 @@ public class KOSearch {
 	     System.out.println("Found " +KOnums.size() + " Distinct KO Numbers");
 	     
 	     
-	     FileDownloader downloadTestFile = new FileDownloader(driver);
-	     driver.get("http://www.genome.jp/en/gn_ftp.html");
-	     WebElement downloadLink = driver.findElement(By.linkText("README"));
-	   
-	    	 try {
-				String  downloadedFileAbsoluteLocation = downloadTestFile.downloadFile(downloadLink);
-				System.out.println(downloadedFileAbsoluteLocation);
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 	
 	     
-	     ExportCsv Csv = new ExportCsv("KO_mapid.csv", false);
+	     ExportCsv Csv = new ExportCsv("data/csv/KO_mapid.csv", false,"gene_KO_number,pathway_id, pathway_url, KGML");
 	     
 	     for (int i=0; i < KOnums.size(); i++)
 	     {
@@ -49,6 +39,23 @@ public class KOSearch {
 	    	 {
 		    	 System.out.println(KOnums.get(i));
 		    	 Pathways= Pathway.Search(KOnums.get(i));
+		    	 
+		    	 //when no pathways are found
+		    	 if (Pathways.size()==0)
+		    	 {
+		    		 System.out.println(i + " For KO: " + KOnums.get(i) + " no Pathway was found." );
+		    		 
+					 try {
+						Csv.WriteFieldCSV(KOnums.get(i),0);
+						Csv.WriteFieldCSV("No pathway found",0);
+						Csv.WriteFieldCSV("" ,1);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+		    	 }
+		    		 
 		    	 for (int j=0; j < Pathways.size(); j++)
 		    	 {
 		    		 System.out.println("For KO: " + KOnums.get(i) + " with pathwayid: " + Pathways.get(j).get(0) + "and URL: " + Pathways.get(j).get(1) );
@@ -56,14 +63,37 @@ public class KOSearch {
 						Csv.WriteFieldCSV(KOnums.get(i),0);
 						Csv.WriteFieldCSV(Pathways.get(j).get(0),0);
 						Csv.WriteFieldCSV(Pathways.get(j).get(1), 0);
-						Csv.WriteFieldCSV("",0);
-						Csv.WriteFieldCSV("" ,1);
-						
-					} catch (IOException e) {
+									    		 
+			    		 
+			    		 
+			    		 //download KGML file
+			    	     FileDownloader downloadFile = new FileDownloader(driver);
+			    	     driver.get(Pathways.get(j).get(1));
+			    	   
+			    	     List<WebElement> downloadLink = driver.findElements(By.linkText("Download KGML"));
+			    	   
+			    	     if (downloadLink.size() > 0)
+			    	     {
+			    	    	 try {
+			    				String  downloadedFileAbsoluteLocation = downloadFile.downloadFile(downloadLink.get(0), Pathways.get(j).get(0)+".xml");
+			    				System.out.println("Downloading "+ Pathways.get(j).get(0) + "File to " + downloadedFileAbsoluteLocation);
+			    			} catch (Exception e1) {
+			    				// TODO Auto-generated catch block
+			    				e1.printStackTrace();
+			    			}
+			    	     }
+			    	     else
+			    	     {
+			    	    	 Csv.WriteFieldCSV("No KGML found", 0);
+			    	    	 System.out.println("No KGML found for " + Pathways.get(j).get(0));
+			    	     }
+			    	     
+			    	     Csv.WriteFieldCSV("" ,1);
+		    	     
+		    		 } catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}	    		 
-		    		 
+		    		 }	
 		    		 
 		    	 }
 	    	 }

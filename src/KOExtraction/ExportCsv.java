@@ -8,17 +8,20 @@ import java.util.ArrayList;
 public class ExportCsv {
 
 	String Filename;
-	private static final String FILE_HEADER = "Sequence id,Sequence Description,gene_KO_number,organism id";
+	private String FILE_HEADER = "";
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private FileWriter fileWriter = null;
-	public ExportCsv (String Fname, boolean contd)
+	public ExportCsv (String Fname, boolean contd, String Header)
 	{
 		this.Filename=Fname;
-		
+		this.FILE_HEADER=Header;
 		try {
 			fileWriter = new FileWriter(Filename,contd);
-			fileWriter.append(FILE_HEADER.toString());
+			
+			if (contd==false)				
+				fileWriter.append(FILE_HEADER.toString());
+			
 			//Add a new line separator after the header
 	        fileWriter.append(NEW_LINE_SEPARATOR);
 		} catch (IOException e) {

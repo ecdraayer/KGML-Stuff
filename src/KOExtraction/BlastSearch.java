@@ -1,9 +1,7 @@
 package KOExtraction;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -11,19 +9,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 public class BlastSearch {
 	ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
-	private String Sequence;
+
 	public BlastSearch ()
 	{
 		
 	}
-	public ArrayList<ArrayList<String>> Search(String sequence)
+	public ArrayList<ArrayList<String>> Search(String sequence, String ktop)
 	{
 		 WebDriver driver = new HtmlUnitDriver();
 		 driver.get("http://www.genome.jp/tools-bin/search_sequence?prog=blastp");
@@ -32,7 +25,7 @@ public class BlastSearch {
 		 org.sendKeys(sequence);
 		 WebElement maxnumber = driver.findElement(By.name("V_value"));
 		 maxnumber.clear();
-		 maxnumber.sendKeys("10");	 
+		 maxnumber.sendKeys(ktop);	 
 	
 		 maxnumber.submit();
 

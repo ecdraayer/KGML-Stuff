@@ -65,7 +65,7 @@ public class KOextraction {
 		        for (int i=c; i < fasta.sequences.size() ; i++)
 		        {
 		        	//System.out.println(fasta.sequences.get(i));
-		        	Bsearch.Search(fasta.sequences.get(i));
+		        	Bsearch.Search(fasta.sequences.get(i),k);
 		        	
 		        	ArrayList<String> DistKOs = new  ArrayList<String> ();
 		        	DistKOs =Bsearch.ReturnDistinctValues(2);
@@ -103,7 +103,7 @@ public class KOextraction {
 		else			
 		{
 			System.out.println("Please provide approtiate arguments");
-			System.out.println("-f fasta file -o output filename -k top matches(default 10)");
+			System.out.println("-f fasta file -o output filename -k top matches(default 10) -c continue at the specified index");
 			
 		}
 		

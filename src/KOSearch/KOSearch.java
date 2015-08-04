@@ -1,6 +1,6 @@
 package KOSearch;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import com.lazerycode.selenium.filedownloader.FileDownloader;
 
 import KOExtraction.ExportCsv;
-import KOExtraction.ParseFasta;
 
 public class KOSearch {
 
@@ -71,12 +70,16 @@ public class KOSearch {
 			    	     driver.get(Pathways.get(j).get(1));
 			    	   
 			    	     List<WebElement> downloadLink = driver.findElements(By.linkText("Download KGML"));
-			    	   
+			    	     WebElement pngdownload = driver.findElement(By.name("pathwayimage"));
 			    	     if (downloadLink.size() > 0)
 			    	     {
 			    	    	 try {
 			    				String  downloadedFileAbsoluteLocation = downloadFile.downloadFile(downloadLink.get(0), Pathways.get(j).get(0)+".xml");
 			    				System.out.println("Downloading "+ Pathways.get(j).get(0) + "File to " + downloadedFileAbsoluteLocation);
+			    				
+			    				//download png file
+			    				String  pnglocation = downloadFile.downloadImage(pngdownload, Pathways.get(j).get(0)+".png");
+			    				System.out.println("Downloading PNG "+ Pathways.get(j).get(0) + "File to " + pnglocation);
 			    			} catch (Exception e1) {
 			    				// TODO Auto-generated catch block
 			    				e1.printStackTrace();

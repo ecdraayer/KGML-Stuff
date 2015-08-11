@@ -8,6 +8,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class reads a comma separated file.
+ * 
+ * It reads the file by column and return array of the specified index of the column.
+ * It can also return a list of the distinct values per column.
+ * 
+ * @author Raul Alvarado
+ *
+ */
 public class ReadCSV {
 
 	String Filename;

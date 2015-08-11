@@ -6,6 +6,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * This class is used to parsed .fasta file.
+ * 
+ * File must be in the following format
+ *   >gi|31563518|ref|NP_852610.1| microtubule-associated proteins 1A/1B light chain 3A isoform b [Homo sapiens]
+   MKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPSKIPVIIERYKGEKQLPVLDKTKFLVPDHVNMSELVKI
+   IRRRLQLNPTQAFFLLVNQHSMVSVSTPIADIYEQEKDEDGFLYMVYASQETFGFIRENE
+   
+   Sequences begging with ">" followed by sequence
+ * @author Raul Alvarado
+ *
+ */
 public class ParseFasta {
 	ArrayList<String> descriptions = new ArrayList<String>();
 	ArrayList<String> sequences = new ArrayList<String>();

@@ -14,6 +14,14 @@ import com.lazerycode.selenium.filedownloader.FileDownloader;
 
 import KOExtraction.ExportCsv;
 
+/**
+ * This programs takes a csv as input(which includes a list of KO Numbers), then it generates a output csv file
+ * with a list of each KO Number, the pathway id and URL.
+ * 
+ * It also downloads the appropriate KGML file and PNG for each pathway and stores it in the data folder.
+ * @author Raul Alvarado
+ *
+ */
 public class KOSearch {
 
 	public static void main(String[] args) {

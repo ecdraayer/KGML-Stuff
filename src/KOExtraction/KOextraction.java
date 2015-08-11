@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
+/**
+ * This program generates a csv file with a list of KO numbers found based on fasta file provided.
+ * @author Raul Alvarado
+ *
+ */
 public class KOextraction {
+
 
 	public static void main(String[] args) {
 			

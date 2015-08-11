@@ -9,6 +9,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+/**
+ * 
+ * This class is used to search for protein sequences in Blast Search tool 
+ * found at http://www.genome.jp/tools-bin/search_sequence?prog=blastp
+ * 
+ * It returns a list of results found, Number of results depends on ktop variable.
+ * @author Raul Alvarado
+ *
+ */
 public class BlastSearch {
 	ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
 

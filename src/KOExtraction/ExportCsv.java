@@ -5,6 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
+/**
+ * This class creates a comma separated file.
+ * Filename and header must be provided to generated the csv file.
+ * WriteFieldCSV accepts data cell by cell.  Must specify end of line.
+ * @author Raul Alvarado
+ *
+ */
 public class ExportCsv {
 
 	String Filename;

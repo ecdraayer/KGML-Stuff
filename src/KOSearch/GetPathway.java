@@ -8,9 +8,20 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+/**
+ * The class is used to retrieve a list of pathways link to KO number.
+ * 
+ * Example URL http://www.genome.jp/kegg-bin/show_pathway?ko01212+K09458
+ *
+ * Return the pathway id and URL.
+ * @author Raul Alvarado
+ *
+ *
+ */
 public class GetPathway {
 
 	
+
 	public ArrayList<ArrayList<String>> Search(String KONumber)
 	{
 		

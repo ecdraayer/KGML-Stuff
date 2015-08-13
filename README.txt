@@ -10,6 +10,10 @@ src: source code
 			
 			
      * KOSearch: written by Raul
+     
+     * ParserTester: written by Erick Draayer
+       The main function is to test the KGML pre-processing files such as parser, writer, and inverted index of gene          listing.
+                  ParserTester.java needs the destination of the input files in the main function. ListGenes controls                    where the output of the inverted index of genese will be printed.
 
 Data: contains the output of KOExtraction and KO search
       CSV files: from sequence id to KO number
@@ -46,4 +50,5 @@ Get links of FASTA files for sequences of human, mouse, and didi’s organisms
     E. Plant: the following file is one that Raul used (from plant)
        https://www.arabidopsis.org/download_files/Proteins/TAIR10_protein_lists/TAIR10_pep_20101214
 ================================================================================================
+
 

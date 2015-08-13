@@ -1,3 +1,11 @@
+/*-------------------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * KGML Writer: Takes in a data structure created in the parser, and writes it into a new KGML file
+ *-----------------------------------------------------------------------------------------*/
+package KGMLParser;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -91,7 +99,7 @@ public class KGMLWrite {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			String filename = pathway.getName();
-			StreamResult result = new StreamResult(new File("file"+filename+".xml"));
+			StreamResult result = new StreamResult(new File("file"+filename+".xml")); /* Name of KGML file */
 	 
 			// Output to console for testing
 			// StreamResult result = new StreamResult(System.out);

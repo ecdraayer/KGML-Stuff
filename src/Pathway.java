@@ -1,3 +1,22 @@
+/*-------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * Pathway class, stores data of the KGML file for easy traversal and comparison
+ *  -Instance Vars: name, org, number, title, image, link
+ *                  List of entries, List of relations, List of reactions
+ *                  
+ *  Modeled from: http://www.kegg.jp/kegg/xml/docs/
+ *  Entries = nodes
+ *  Reactions & Relations = edges
+ *-----------------------------------------------------------------------------*/
+
+package KGMLParser;/* 
+ * @Erick Draayer
+ * 07/21/15
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,60 +44,34 @@ public class Pathway {
         reactionL = new ArrayList<Reaction>();
 	}
 
+	/* No argument constructor */
 	public Pathway() {
         entryL = new ArrayList<Kegg_Entry>();
         relationL = new ArrayList<Relation>();
         reactionL = new ArrayList<Reaction>();
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getOrg() {
-		return org;
-	}
-
-	public void setOrg(String org) {
-		this.org = org;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public String getLink() {
-		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
-	}
+	/* Getters and Setters for instance variables */
+	public String getName() {return name;}
+	public void setName(String name) {this.name = name;}
+	public String getOrg() {return org;}
+	public void setOrg(String org) {this.org = org;}
+	public String getNumber() {return number;}
+	public void setNumber(String number) {this.number = number;}
+	public String getTitle() {return title;}
+	public void setTitle(String title) {this.title = title;}
+	public String getImage() {return image;}
+	public void setImage(String image) {this.image = image;}
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
+	public List<Kegg_Entry> getEntryL() {return entryL;}
+	public void setEntryL(List<Kegg_Entry> entryL) {this.entryL = entryL;}
+	public List<Relation> getRelationL() {return relationL;}
+	public void setRelationL(List<Relation> relationL) {this.relationL = relationL;}
+	public List<Reaction> getReactionL() {return reactionL;}
+	public void setReactionL(List<Reaction> reactionL) {this.reactionL = reactionL;}
 	
+	/* Prints out Pathway */
 	public String toString(){
 		String result = "";
 		result += "Pathway :: [name=" + name + " org=" + org + " number=" + number + "\n";
@@ -98,29 +91,7 @@ public class Pathway {
 	    return result;
 	}
 
-	public List<Kegg_Entry> getEntryL() {
-		return entryL;
-	}
 
-	public void setEntryL(List<Kegg_Entry> entryL) {
-		this.entryL = entryL;
-	}
-
-	public List<Relation> getRelationL() {
-		return relationL;
-	}
-
-	public void setRelationL(List<Relation> relationL) {
-		this.relationL = relationL;
-	}
-
-	public List<Reaction> getReactionL() {
-		return reactionL;
-	}
-
-	public void setReactionL(List<Reaction> reactionL) {
-		this.reactionL = reactionL;
-	}
 
 
 }

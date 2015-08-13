@@ -1,3 +1,13 @@
+/*-------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * Parses KGML files using SAX and stores the information in a Pathway class
+ *
+ *-----------------------------------------------------------------------------*/
+
+package KGMLParser;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -8,27 +18,38 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 public class MySaxParser extends DefaultHandler {
     String KeggXmlFileName; /* Name of file being parsed */
+    
+    /* type values storing various data */
     String tmpValue;
-    Kegg_Entry entryTmp;
+    Kegg_Entry entryTmp;  
     Relation relationTmp;
     Reaction reactionTmp;
     Pathway pathwaytmp;
     Subtype subtypeTmp;
     Substrate substrateTmp;
     Product productTmp;
+    Graph graphTmp;
 
-    public MySaxParser(String KeggXmlFileName, Pathway pathway1) {
+    /*--------------------------------------------------------------------------
+     * SAX parser function, calls parse function. 
+     * Input: File name of KGML file and a empty pathway to fill
+     *--------------------------------------------------------------------------*/
+    public MySaxParser(String KeggXmlFileName, Pathway pathway) {
         this.KeggXmlFileName = KeggXmlFileName;
-        pathwaytmp = pathway1;
+        pathwaytmp = pathway;
         parseDocument();
-        //printDatas();
     }
+    /*-----------------------------------------------------------------------------
+     * Parse function that makes sure the SAX parser can operate on the given file,
+     * gives error if there is an error in the file or IO problem
+     *--------------------------------------------------------------------------*/
     private void parseDocument() {
         // parse
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParserFactory factory = SAXParserFactory.newInstance(); /* Create new instance of SAX parser */
         try {
             SAXParser parser = factory.newSAXParser();
-            parser.parse(KeggXmlFileName, this);
+            parser.parse(KeggXmlFileName, this); /* Pass name of file and this handle to parser */
+        /* Errors with brief descriptions */
         } catch (ParserConfigurationException e) {
             System.out.println("ParserConfig error");
         } catch (SAXException e) {
@@ -38,6 +59,12 @@ public class MySaxParser extends DefaultHandler {
         }
     }
     
+    /*-----------------------------------------------------------------------------------------------
+     * (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     *
+     * Override of startElement, looks for the elements entry, id, name, reaction, link, and type within KGML file
+     *---------------------------------------------------------------------------------------------*/
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
     	
@@ -49,13 +76,13 @@ public class MySaxParser extends DefaultHandler {
             entryTmp.setLink(attributes.getValue("link"));
             entryTmp.setType(attributes.getValue("type"));
         }
-        //Graphics information (not needed)
-        /*if(elementName.equalsIgnoreCase("graphics")){
+
+        if(elementName.equalsIgnoreCase("graphics")){
         	entryTmp.setGraph(attributes.getValue("name"),attributes.getValue("fgcolor"),
         			          attributes.getValue("bgcolor"),attributes.getValue("type"),
         			          attributes.getValue("x"),attributes.getValue("y"),
         			          attributes.getValue("width"), attributes.getValue("height"));
-        }*/
+        }
         if(elementName.equalsIgnoreCase("pathway")){
         	pathwaytmp.setName(attributes.getValue("name"));
         	pathwaytmp.setOrg(attributes.getValue("org")); 
@@ -86,6 +113,13 @@ public class MySaxParser extends DefaultHandler {
         	productTmp = new Product(attributes.getValue("id"), attributes.getValue("name"));
         }
     }
+    
+    /*--------------------------------------------------------------------------------------------------------
+     * (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+     * 
+     * Override of endElement, adds data to Pathway class when it detects the end of the elements entry, relation, reaction, subtype, substrate, product
+     *-------------------------------------------------------------------------------------------------------*/
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
         // if end of entry element add to entry list

@@ -1,3 +1,4 @@
+package KGMLParser;
 
 public class Subtype {
    String name;

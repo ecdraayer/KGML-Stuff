@@ -1,15 +1,19 @@
-/**
- * Kegg XML entry to class to store information on each entry in the KGML files
- * @author edraa
- *
- */
+package KGMLParser;
+/*-------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * Class that stores the data for the element "entry" 
+ *-----------------------------------------------------------------------------*/
 public class Kegg_Entry {
 	String id;
 	String name;
 	String type;
 	String reaction;
 	String link;
-	//Graph graphInfo;
+	Graph graphInfo;
+	
 	//Getters and Setter
 	public String getID(){return id;}
 	public void setID(String id){this.id = id;}
@@ -26,12 +30,13 @@ public class Kegg_Entry {
     public String getLink(){return link;}
     public void setLink(String link){this.link = link;}
     
-    /*public void setGraph(String name, String fgcolor, String bgcolor, String type, String x, String y, String width, String height){
+    public void setGraph(String name, String fgcolor, String bgcolor, String type, String x, String y, String width, String height){
     	graphInfo = new Graph(name,fgcolor,bgcolor,type,x,y,width,height);
-    }*/
+    }
+    
     
     public String toString(){
-    	String result = "";
+    	String result = ""; //Add GraphInfo to test if it is correct
     	result += "Entry :: ";
     	result += "[ID = " + id + " Name = " + name + " Type = " + type + " Reaction = " + reaction + " Link = " + link + "]";
     	return result;

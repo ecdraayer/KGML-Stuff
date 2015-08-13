@@ -1,3 +1,4 @@
+package KGMLParser;
 
 public class Graph {
     String name;

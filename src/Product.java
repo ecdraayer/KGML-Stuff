@@ -1,3 +1,4 @@
+package KGMLParser;
 public class Product {
 	String id;
 	String name;

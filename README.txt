@@ -2,27 +2,18 @@
 src: source code
      * KOExtraction: written by Raul
          * KOextraction.java
-           The main function to extract KO numbers of gene sequences
-		   It takes the following arguments:
-		   -f fasta file 
-		   -o output filename (no extension needed)
-		   -k top matches(default 10) 
-		   -r restart program at the last index found in csv file, new rows will be appended to existing file.
-		   
-		   For Example:
-		   -f TAIR10_pep_20101214.fasta -o data/csv/Seq_KO -r
-			
+           The main function to extract KO numbers of gene sequences.  It fasta file which contains a list of protein sequences,
+		   then it searches for the sequence and it extract its corresponding top k KO Numbers and places the result in a csv file. 
+		 Example Fasta file sequence.
+		 >jgi|Crypa2|320691|fgenesh1_kg.1_#_771_#_CEST_58_G_07
+		MAVYSTSFTTERPMLYGRSGYNNKPNGGDDDDSNKNQGRSGYNSKPNGGDDDEDKNRGRSGYNSKPDGSD
+		DKDKKRSFNFA*
 			
      * KOSearch: written by Raul
 		KOSearch.java
 		The main function takes a csv file as input(from KOExtraction), search for the KO Number in order to 
 		retrieve the pathway id, KGML and Png files.  It output a CSV as a results along with the mention files.
-		-i input csv file (output of KOExtraction)
-		-o output path(no filename needed). It will output the a csv file plus KGML and png files.
-		-r restart program, it compares the input and output files to determine list of pending KO Number to searh");
 		
-		 For Example:
-		   -i Data\CSV\Seq_KO.csv -o Data\ -r
 		
      * ParserTester: written by Erick Draayer
        The main function is to test the KGML pre-processing files such as parser, writer, and inverted index of gene          listing.
@@ -35,9 +26,23 @@ Data: contains the output of KOExtraction and KO search
 
 ================================================================================================
 Steps to run Raul's code to download pathways from sequence files (by Raul)
-
-PLEASE PUT THE DETAILED STEPS HERE.
-
+	KOExtraction:
+	It takes the following arguments:
+		   -f fasta file 
+		   -o output filename (no extension needed)
+		   -k top matches(default 10) 
+		   -r restart program at the last index found in csv file, new rows will be appended to existing file.
+		   
+		   For Example:
+		   -f TAIR10_pep_20101214.fasta -o data/csv/Seq_KO -r
+	KOSearch
+	It takes the following arguments:
+		-i input csv file (output of KOExtraction)
+		-o output path(no filename needed). It will output the a csv file plus KGML and png files.
+		-r restart program, it compares the input and output files to determine list of pending KO Number to searh");
+		
+		 For Example:
+		   -i Data\CSV\Seq_KO.csv -o Data\ -r
 ================================================================================================
 Resource to get sequence (FASTA) files (from 08/06/2015 Meeting)
   - added by Huiping

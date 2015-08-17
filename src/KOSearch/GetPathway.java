@@ -2,6 +2,7 @@ package KOSearch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -26,15 +27,30 @@ public class GetPathway {
 	{
 		
 		WebDriver driver = new HtmlUnitDriver(); 
+		boolean pathwayexist = false;
+		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
+		driver.manage().timeouts().setScriptTimeout(120, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 		ArrayList<ArrayList<String>> table  = new ArrayList<ArrayList<String>>();
 		
 		driver.get("http://www.genome.jp/dbget-bin/www_bget?ko:" + KONumber);
 		
-		//check if pathway exists	
+		//check if pathway exists			
+		List<WebElement> ths = driver.findElements(By.tagName("th"));
 		
-		List<WebElement> pathway = driver.findElements(By.partialLinkText("KEGG PATHWAY"));
 		
-		if (pathway.size()>0)
+		for (int i=0;i<ths.size();i++)
+		{
+			//System.out.println(ths.get(i).getText());
+			if (ths.get(i).getText().contains("Pathway"))
+			{
+				pathwayexist=true;
+			}
+		
+		}
+		
+		
+		if (pathwayexist==true)
 		{
 			WebElement form = driver.findElement(By.name("form1"));
 			List<WebElement> tables = form.findElements(By.tagName("table"));		

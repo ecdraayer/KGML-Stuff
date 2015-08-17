@@ -3,6 +3,9 @@ package KOExtraction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
+import KOSearch.ReadCSV;
 
 
 /**
@@ -37,14 +40,15 @@ public class KOextraction {
 					if (args[j+1].contains("-")==false)
 						output=args[j+1] + ".csv";
 				}
-				if (args[j].equals("-c"))
+				if (args[j].equals("-r"))
 				{
-					//option to indicate on which index to restart the program
+					/*option to indicate on which index to restart the program
 					if (args[j+1].contains("-")==false)
 					{
 						c=Integer.parseInt(args[j+1]);
 						contd=true;
-					}
+					}*/
+					contd=true;
 				}
 				if (args[j].equals("-k"))
 				{
@@ -61,13 +65,25 @@ public class KOextraction {
 		
 			if (output.isEmpty()==false && fastaname.isEmpty()==false)
 			{
-		        ParseFasta fasta = new ParseFasta(fastaname); 
-				
-		       
-		        
+		        ParseFasta fasta = new ParseFasta(fastaname);
 				BlastSearch Bsearch = new BlastSearch();
 				ExportCsv Csv = new ExportCsv(output, contd,"Sequence id,Sequence Description,gene_KO_number,organism id");
 				
+		        //determine idx to restart from
+				if (contd==true)
+				{
+				     ReadCSV readCSV = new ReadCSV(output);
+				     ArrayList<String> idxs = new ArrayList<String>();
+				     idxs = readCSV.ReadColDistinctValues(0);
+				    
+				     c = Integer.parseInt(Collections.max(idxs)) +1;
+				     //delete rows to avoid incomplete sets of results
+				     
+				   //  Csv.DeleteRows(c.toString());
+				}
+		       
+		        
+		
 		        for (int i=c; i < fasta.sequences.size() ; i++)
 		        {
 		        	//System.out.println(fasta.sequences.get(i));
@@ -91,10 +107,11 @@ public class KOextraction {
 							Csv.WriteFieldCSV(KONums.get(i1), 0);
 							Csv.WriteFieldCSV(OrgIds.get(i1) ,0);
 							Csv.WriteFieldCSV("" ,1);
-						
+							Csv.FlushCSV();
 							
 			        	}
-						
+		        	
+		        		
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -108,8 +125,8 @@ public class KOextraction {
 		}
 		else			
 		{
-			System.out.println("Please provide approtiate arguments");
-			System.out.println("-f fasta file -o output filename -k top matches(default 10) -c continue at the specified index");
+			System.out.println("Please provide appropriate arguments");
+			System.out.println("-f fasta file -o output filename -k top matches(default 10) -r restart program at the last index found in csv file");
 			
 		}
 		

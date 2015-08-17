@@ -42,6 +42,14 @@ Steps to run Raul's code to download pathways from sequence files (by Raul)
 		
 		 For Example:
 		   -i Data\CSV\Seq_KO.csv -o Data\ -r
+
+================================================================================================
+Steps to run Erick’s code (by Erick)
+
+Inverted list index generation: 
+
+parse KGML files??: 
+
 ================================================================================================
 Resource to get sequence (FASTA) files (from 08/06/2015 Meeting)
   - added by Huiping

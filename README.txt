@@ -2,8 +2,7 @@
 src: source code
      * KOExtraction: written by Raul
          * KOextraction.java
-           The main function to extract KO numbers of gene sequences.  It fasta file which contains a list of protein sequences,
-		   then it searches for the sequence and it extract its corresponding top k KO Numbers and places the result in a csv file. 
+           The main function to extract KO numbers of gene sequences.  It fasta file which contains a list of protein sequences, then it searches for the sequence and it extract its corresponding top k KO Numbers and places the result in a csv file. 
 		 Example Fasta file sequence.
 		 >jgi|Crypa2|320691|fgenesh1_kg.1_#_771_#_CEST_58_G_07
 		MAVYSTSFTTERPMLYGRSGYNNKPNGGDDDDSNKNQGRSGYNSKPNGGDDDEDKNRGRSGYNSKPDGSD

@@ -34,6 +34,11 @@ Data: contains the output of KOExtraction and KO search
       xml files: pathway KGML files.
 
 ================================================================================================
+Steps to run Raul's code to download pathways from sequence files (by Raul)
+
+PLEASE PUT THE DETAILED STEPS HERE.
+
+================================================================================================
 Resource to get sequence (FASTA) files (from 08/06/2015 Meeting)
   - added by Huiping
 

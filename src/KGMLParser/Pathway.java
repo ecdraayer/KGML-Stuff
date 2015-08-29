@@ -22,6 +22,7 @@ import java.util.List;
 
 public class Pathway {
 	String name;
+	Boolean visited;  /*New for DFS */
 	String org;
 	String number;
 	String title;
@@ -30,6 +31,7 @@ public class Pathway {
     List<Kegg_Entry> entryL;
     List<Relation> relationL;
     List<Reaction> reactionL;
+
 	
 	public Pathway(String name, String org, String number, String title,
 			String image, String link) {
@@ -39,6 +41,7 @@ public class Pathway {
 		this.title = title;
 		this.image = image;
 		this.link = link;
+		this.visited = false;
         entryL = new ArrayList<Kegg_Entry>();
         relationL = new ArrayList<Relation>();
         reactionL = new ArrayList<Reaction>();
@@ -50,7 +53,10 @@ public class Pathway {
         relationL = new ArrayList<Relation>();
         reactionL = new ArrayList<Reaction>();
 	}
-
+ 
+	
+	public Boolean getVisited(){return visited;}
+	public void setVisited(Boolean visited){this.visited = visited;}
 	/* Getters and Setters for instance variables */
 	public String getName() {return name;}
 	public void setName(String name) {this.name = name;}
@@ -90,8 +96,5 @@ public class Pathway {
         }
 	    return result;
 	}
-
-
-
 
 }

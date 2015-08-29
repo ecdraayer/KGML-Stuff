@@ -90,6 +90,8 @@ public class MySaxParser extends DefaultHandler {
         	pathwaytmp.setTitle(attributes.getValue("title"));
             pathwaytmp.setImage(attributes.getValue("image"));
             pathwaytmp.setLink(attributes.getValue("link"));
+            pathwaytmp.setVisited(false);
+
         }
         if(elementName.equalsIgnoreCase("relation")){
         	relationTmp = new Relation();

@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class ListGenes {
+	
 	public static HashMap<String, ArrayList<String>> map;
+	
 	public static void Listgenes(ArrayList<Pathway> pathways) throws IOException{
 		map = new HashMap<String, ArrayList<String>>();
 		for(Pathway cpway : pathways){
@@ -39,12 +41,14 @@ public class ListGenes {
     	
     	while(keySetIterator.hasNext()){
     		String key = keySetIterator.next();
-    		result += key + " belongs to " + map.get(key) + "\n";
+    		result += key + " " + map.get(key) + "\n";
     	}
     	Log(result);
     }
     
     private static void Log(String message) throws IOException{
+    	PrintWriter pw = new PrintWriter("output.txt");
+    	pw.close();
         PrintWriter out = new PrintWriter(new FileWriter("output.txt", true), true);
         out.write(message);
         out.close();

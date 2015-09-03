@@ -15,6 +15,9 @@ src: source code
 		
 		
      * ParserTester: written by Erick Draayer
+       To Compile and Run:
+       $ javac *.java -d .
+       $ java KGMLParser.ParserTester
        The main function is to test the KGML pre-processing files such as parser, writer, and inverted index of gene          listing.
                   ParserTester.java needs the destination of the input files in the main function. ListGenes controls                    where the output of the inverted index of genese will be printed.
 

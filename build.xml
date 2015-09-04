@@ -58,7 +58,6 @@
     	<echo message="Re-create jar file ${dist}/kgml.jar"/>
         <jar destfile="kgml.jar">
             <manifest>
-            	<!-- Run it: java -cp infdetection.jar sampling.Probability.MainInfDetection -->
                 <attribute name="Class-Path" value=". lib/selenium-server-standalone-2.46.0.jar"/>
             </manifest>
             <fileset dir="${build}"/>

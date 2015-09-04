@@ -54,8 +54,8 @@ public class ListGenes {
         out.close();
     }
     
-    public static void Query(String entry1, String entry2){
+    /*public static void Query(String entry1, String entry2){
         System.out.println(map.get(entry1));
         System.out.println(map.get(entry2));
-    }
+    }*/
 }

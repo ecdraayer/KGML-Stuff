@@ -2,19 +2,27 @@
 src: source code
      * KOExtraction: written by Raul
          * KOextraction.java
-           The main function to extract KO numbers of gene sequences.  It fasta file which contains a list of protein sequences, then it searches for the sequence and it extract its corresponding top k KO Numbers and places the result in a csv file. 
+           The main function to extract KO numbers(Gene Id on KEGG DB) of gene sequences.  It reads fasta file which contains a list of protein sequences, then it searches for the sequence and it extract its corresponding top k KO Numbers and places the result in a csv file. 
 		 Example Fasta file sequence.
 		 >jgi|Crypa2|320691|fgenesh1_kg.1_#_771_#_CEST_58_G_07
 		MAVYSTSFTTERPMLYGRSGYNNKPNGGDDDDSNKNQGRSGYNSKPNGGDDDEDKNRGRSGYNSKPDGSD
 		DKDKKRSFNFA*
-			
+		Blast Search URL
+		http://www.genome.jp/tools-bin/search_sequence?prog=blastp
+		
      * KOSearch: written by Raul
 		KOSearch.java
 		The main function takes a csv file as input(from KOExtraction), search for the KO Number in order to 
-		retrieve the pathway id, KGML and Png files.  It output a CSV as a results along with the mention files.
+		retrieve the pathway id, KGML and Png files.  It outputs a CSV as a results along with the mention files.
+		
+		Example Pathway URL
+		http://www.genome.jp/dbget-bin/www_bget?ko00904
 		
 		
      * ParserTester: written by Erick Draayer
+       To Compile and Run:
+       $ javac *.java -d .
+       $ java KGMLParser.ParserTester
        The main function is to test the KGML pre-processing files such as parser, writer, and inverted index of gene          listing.
                   ParserTester.java needs the destination of the input files in the main function. ListGenes controls                    where the output of the inverted index of genese will be printed.
 

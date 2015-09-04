@@ -75,7 +75,7 @@ public class PathwayMap {
 	 public int getIndexof(String p){
 	  	 int i = 0;
 	  	 for(Pathway pway : pathways){
-	  		 if(p == pway.getName())
+	  		 if(p.equals(pway.getName()))
 	  			 break;
 	  		 i++;
 	  	 }

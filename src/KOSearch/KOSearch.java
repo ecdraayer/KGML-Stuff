@@ -167,7 +167,8 @@ public class KOSearch {
 		else			
 		{
 			System.out.println("Please provide appropriate arguments");
-			System.out.println("-i input csv file -o output path(no filename needed)  -r restart program, it compares the input and output files to determine list of peding KO Number to searh");
+			System.out.println("-i input csv file -o output path(no filename needed) " );
+			System.out.println(" -r restart program, it compares the input and output files to determine list of peding KO Number to search");
 			
 		}
 	}

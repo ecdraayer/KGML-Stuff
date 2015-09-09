@@ -45,7 +45,7 @@
 		<javac debug="true"
 			srcdir="${src}"
 			destdir="${build}"
-			source="1.8"
+			source="1.7"
 			includeantruntime="false">
 			<classpath refid="project.classpath"/>
 		</javac>

@@ -30,6 +30,7 @@ public class Kegg_Entry {
     public String getLink(){return link;}
     public void setLink(String link){this.link = link;}
     
+    public Graph GetGraph(){return graphInfo;}
     public void setGraph(String name, String fgcolor, String bgcolor, String type, String x, String y, String width, String height){
     	graphInfo = new Graph(name,fgcolor,bgcolor,type,x,y,width,height);
     }

@@ -17,7 +17,7 @@ public class ParserTester {
 	public static void main(String[] args) throws IOException {
     	PathwayMap Organism = new PathwayMap();
     	ListGenes.Listgenes(Organism.pathways);
-    	Organism.isConnected();
+    	//Organism.isConnected();
     }
 	
 }

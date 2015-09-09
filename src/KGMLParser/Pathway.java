@@ -96,5 +96,13 @@ public class Pathway {
         }
 	    return result;
 	}
+	 public String GetNameFromId(String id){
+	  	 String name = "";
+	  	 for(Kegg_Entry k : entryL){
+	  		 if(id.equals(k.getID()))
+	  			name=k.getName();
+	  	 }
+	  	 return name;
+     }
 
 }

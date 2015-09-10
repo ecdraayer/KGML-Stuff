@@ -10,7 +10,7 @@ public class PathwayMap {
 	ArrayList<Pathway> sublist; /*Sublist for the connections instance variable */
 	
 	public PathwayMap(){
-		final File folder = new File("C:\\Users\\Raul\\Desktop\\Project\\KGML-Stuff\\Bacteria - 879462.4.PATRIC\\xmls"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
+		final File folder = new File("/home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
 		pathways = new ArrayList<Pathway>(); 
         connections = new ArrayList<ArrayList<Pathway>>();
 		sublist = new ArrayList<Pathway>();
@@ -81,5 +81,22 @@ public class PathwayMap {
 	  	 }
 	  	 return i;
      }
+	 
+	 public void getTotalStats(){
+		 int totalCompounds = 0;
+		 int totalGenes = 0;
+		 int totalReactions = 0;
+		 int totalRelations = 0;
+		 for(Pathway ptmp : pathways){	
+			 totalCompounds += ptmp.compoundNum;
+			 totalGenes += ptmp.geneNum;
+			 totalReactions += ptmp.reactionNum;
+			 totalRelations += ptmp.relationNum;
+		 }		 
+		 System.out.println("Total Compounds: " + totalCompounds);
+		 System.out.println("Total Genes: " + totalGenes);
+		 System.out.println("Total Reactions: " + totalReactions);
+		 System.out.println("TotalRelations: " + totalRelations);
+	 }
 
 }

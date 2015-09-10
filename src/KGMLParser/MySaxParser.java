@@ -75,6 +75,10 @@ public class MySaxParser extends DefaultHandler {
             entryTmp.setReaction(attributes.getValue("reaction"));
             entryTmp.setLink(attributes.getValue("link"));
             entryTmp.setType(attributes.getValue("type"));
+            if(entryTmp.getType().equals("compound"))
+            	pathwaytmp.compoundNum++;
+            else if(!(entryTmp.getType().equals("map")))
+            	pathwaytmp.geneNum++;
         }
 
         if(elementName.equalsIgnoreCase("graphics")){
@@ -98,6 +102,7 @@ public class MySaxParser extends DefaultHandler {
         	relationTmp.setEntry1(attributes.getValue("entry1"));
         	relationTmp.setEntry2(attributes.getValue("entry2"));
         	relationTmp.setType(attributes.getValue("type"));
+        	pathwaytmp.relationNum++;
         }
         if(elementName.equalsIgnoreCase("subtype")){
            subtypeTmp = new Subtype(attributes.getValue("name"), attributes.getValue("value"));
@@ -107,6 +112,7 @@ public class MySaxParser extends DefaultHandler {
         	reactionTmp.setId(attributes.getValue("id"));
         	reactionTmp.setName(attributes.getValue("name"));
             reactionTmp.setType(attributes.getValue("type"));
+            pathwaytmp.reactionNum++;
         }
         if(elementName.equalsIgnoreCase("substrate")){
         	substrateTmp = new Substrate(attributes.getValue("id"), attributes.getValue("name"));

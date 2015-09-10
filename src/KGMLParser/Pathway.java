@@ -31,6 +31,10 @@ public class Pathway {
     List<Kegg_Entry> entryL;
     List<Relation> relationL;
     List<Reaction> reactionL;
+	int compoundNum = 0;
+	int geneNum = 0;
+	int relationNum = 0;
+	int reactionNum = 0;
 
 	
 	public Pathway(String name, String org, String number, String title,
@@ -53,7 +57,15 @@ public class Pathway {
         relationL = new ArrayList<Relation>();
         reactionL = new ArrayList<Reaction>();
 	}
- 
+	
+	public int getCompoundNum(){return compoundNum;}
+	public void setCompoundNum(int c){this.compoundNum = c;}
+	public int getGenesNum(){return geneNum;}
+	public void setGenesNum(int g) {this.geneNum = g;}
+	public int getRelationNum(){return relationNum;}
+	public void setRelationNum(int r){this.relationNum = r;}
+	public int getReactionNum(){return reactionNum;}
+	public void setReactionNum(int re){this.reactionNum = re;}
 	
 	public Boolean getVisited(){return visited;}
 	public void setVisited(Boolean visited){this.visited = visited;}
@@ -104,5 +116,13 @@ public class Pathway {
 	  	 }
 	  	 return name;
      }
+	 
+	 public void getStats(){
+		 System.out.println(name + " Stats:");
+		 System.out.println("Compounds: " + compoundNum);
+		 System.out.println("Genes: " + geneNum);
+		 System.out.println("Relations: " + relationNum);
+		 System.out.println("Reactions: " + reactionNum);
+	 }
 
 }

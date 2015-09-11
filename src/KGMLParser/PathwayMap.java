@@ -8,9 +8,9 @@ public class PathwayMap {
 	public ArrayList<Pathway> pathways; /*Stores all the pathways that our organism has*/
 	ArrayList<ArrayList<Pathway>> connections; /*Stores the information on which pathways are connected to eachother */
 	ArrayList<Pathway> sublist; /*Sublist for the connections instance variable */
-	
+
 	public PathwayMap(){
-		final File folder = new File("/home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
+		final File folder = new File("C:\\Users\\Raul\\Desktop\\Project\\KGML-Stuff\\Bacteria - 879462.4.PATRIC\\xmls"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
 		pathways = new ArrayList<Pathway>(); 
         connections = new ArrayList<ArrayList<Pathway>>();
 		sublist = new ArrayList<Pathway>();

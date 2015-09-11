@@ -116,6 +116,14 @@ public class Pathway {
 	  	 }
 	  	 return name;
      }
+	 public String GetXvalue(String name){
+	  	 String x = "";
+	  	 for(Kegg_Entry k : entryL){
+	  		 if(name.equals(k.getName()))
+	  			x=k.graphInfo.x;
+	  	 }
+	  	 return x;
+     }
 	 
 	 public void getStats(){
 		 System.out.println(name + " Stats:");

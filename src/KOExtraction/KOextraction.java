@@ -74,9 +74,11 @@ public class KOextraction {
 				{
 				     ReadCSV readCSV = new ReadCSV(output);
 				     ArrayList<String> idxs = new ArrayList<String>();
+				     ArrayList<Integer> idxsInt = new ArrayList<Integer>();
 				     idxs = readCSV.ReadColDistinctValues(0);
-				    
-				     c = Integer.parseInt(Collections.max(idxs)) +1;
+				     //convert to integer for max to work
+				     for(String s : idxs) idxsInt.add(Integer.valueOf(s));
+				     c = (Collections.max(idxsInt)) +1;
 				     //delete rows to avoid incomplete sets of results
 				     
 				   //  Csv.DeleteRows(c.toString());

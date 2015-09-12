@@ -57,12 +57,22 @@ public class TransformToGraph extends JApplet {
         frame.setVisible(true);
 
    
+        String Gene1="",Gene2="";
+        QueryGenerator Query = new QueryGenerator();
+        
+        Gene1= Query.GetRandomGene();
         System.out.println("Shortest path from " + "ko:K01184" + " to " + "ko:K01184" );
-	    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, "ko:K01184", "ko:K00880");
+	    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, "ko:K01184", "ko:K00039");
 	    
-	    System.out.println(path);
-	    ShortestPathtoGraph SG= new ShortestPathtoGraph();
-	    SG.CreateGraph(path);
+	    if (path != null )
+	    {
+		    System.out.println(path);
+		    ShortestPathtoGraph SG= new ShortestPathtoGraph();
+		    SG.CreateGraph(path);
+	    }
+	    else
+	    	System.out.println("No path found");
+	    
 	}
 
 	public void init()
@@ -109,7 +119,7 @@ public class TransformToGraph extends JApplet {
 		    		
 		    			
 
-	    			System.out.println(k.getID() + " " + k.getName() + " " + k.GetGraph().getX());
+	    			//System.out.println(k.getID() + " " + k.getName() + " " + k.GetGraph().getX());
 	    			}
 	    			
 	    			

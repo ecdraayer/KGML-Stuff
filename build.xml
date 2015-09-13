@@ -1,87 +1,118 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="all" name="Create Runnable Jar for Project infdetection with libraries in sub-folder">
-	<property name="src" location="src"/>
-	<property name="build" location="bin"/>
-	<property name="dist"  location="."/>
-	<property name="lib"  location="lib"/>
-	<property name="docs"  location="javadoc"/>
-	
-	<!--
-	<path id="external.jars">
-		<fileset dir="${lib}" includes="**/*.jar"/>
-	</path>
-	-->
-	
-	<path id="project.classpath">
-		<!--
-		<pathelement location="${src}"/>
-		<path refid="external.jars" />
-		-->
-		<pathelement location="${build}"/>
-		<fileset dir="${lib}">
-			<include name="*.jar"/>
-		</fileset>
-	</path>
-	
-	<target name="clean">
-		<echo message="Delete dir ${build}"/>
-		<delete dir="${build}"/>
-		<!--
-		<echo message="Delete jar file ${dist}/infdetection.jar"/>
-		<delete file ="${dist}/infdetection.jar"/> -->
-	</target>
-
-	<target name="init" depends="clean">
-		<echo message="Create directory ${build}"/>
-		<mkdir dir="${build}"/>
-	</target>
-
-	<!-- depends="init" -->
-	<target name="compile" description="compile the source ">
-	    <!-- Compile the java code from ${src} into ${build} -->
-		<!--<javac srcdir="${src}" destdir="${build}"/>-->
-		
-		<echo message="${ant.project.name}: ${ant.file}"/>
-		<javac debug="true"
-			srcdir="${src}"
-			destdir="${build}"
-			source="1.7"
-			includeantruntime="false">
-			<classpath refid="project.classpath"/>
-		</javac>
-	</target>
-	
-    <target name="build">
-    	<echo message="Delete jar file ${dist}/kgml.jar"/>
-    	<delete file ="${dist}/kgml.jar"/>
-    	
-    	<echo message="Re-create jar file ${dist}/kgml.jar"/>
-        <jar destfile="kgml.jar">
-            <manifest>
-                <attribute name="Class-Path" value=". lib/selenium-server-standalone-2.46.0.jar"/>
-				<attribute name="Class-Path" value=". javax.mail.jar"/>
-            </manifest>
-            <fileset dir="${build}"/>
-        </jar>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="KGML-Stuff">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../eclipse/"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="KGML-Stuff.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/selenium-server-standalone-2.46.0.jar"/>
+        <pathelement location="lib/jgraph-5.13.0.0.jar"/>
+        <pathelement location="lib/jgrapht-core-0.9.1.jar"/>
+        <pathelement location="lib/jgrapht-ext-0.9.1.jar"/>
+        <pathelement location="lib/jgrapht-ext-0.9.1-uber.jar"/>
+        <pathelement location="lib/jgraphx-2.0.0.1.jar"/>
+        <pathelement location="lib/javax.mail.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
     </target>
-	
-	<target name="javadoc">
-			<echo>Deleting old javadocs</echo>
-			<delete dir="${docs}"/>
-			<echo>Creating javadoc directory</echo>
-			<mkdir dir="${docs}"/>
-			
-			<echo>Generating javadocs</echo>
-			<javadoc destdir="${docs}" windowtitle="Influence detection" private="true">
-				<fileset dir="${src}/convergence">
-					<include name="*.java"/>
-				</fileset> 
-			</javadoc>
-	</target>
-	
-	
-	
-	<target name="all" depends="init,compile,build">
-	</target>
-	
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="KGML-Stuff.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="AWTConsole">
+        <java classname="bsh.util.AWTConsole" failonerror="true" fork="yes">
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="KOextraction (2)">
+        <java classname="KOExtraction.KOextraction" failonerror="true" fork="yes">
+            <arg line="-f 511145.12.PATRIC.faa -o Bacteria_879462.4.PATRIC/csv/Seq_KO -r"/>
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="KOSearch">
+        <java classname="KOSearch.KOSearch" failonerror="true" fork="yes">
+            <arg line="-i Data\CSV\Seq_KO.csv -o Data -r"/>
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="ParserTester (1)">
+        <java classname="KGMLParser.ParserTester" failonerror="true" fork="yes">
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="ShortestPathtoGraph">
+        <java classname="sun.applet.AppletViewer" dir="." failonerror="true" fork="yes">
+            <arg line="ShortestPathtoGraph.html"/>
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="TransformToGraph (1)">
+        <java classname="sun.applet.AppletViewer" dir="." failonerror="true" fork="yes">
+            <arg line="TransformToGraph (1).html"/>
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="TransformToGraph">
+        <java classname="TrasnformToGraph.TransformToGraph" failonerror="true" fork="yes">
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="TrasnformToGraph">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <classpath refid="KGML-Stuff.classpath"/>
+        </junit>
+    </target>
+    <target name="SendMail">
+        <java classname="EmailErrors.SendMail" failonerror="true" fork="yes">
+            <classpath refid="KGML-Stuff.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
 </project>

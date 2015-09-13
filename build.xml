@@ -1,118 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- WARNING: Eclipse auto-generated file.
-              Any modifications will be overwritten.
-              To include a user specific buildfile here, simply create one in the same
-              directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="KGML-Stuff">
-    <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../eclipse/"/>
-    <property name="junit.output.dir" value="junit"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.7"/>
-    <property name="source" value="1.7"/>
-    <path id="KGML-Stuff.classpath">
-        <pathelement location="bin"/>
-        <pathelement location="lib/selenium-server-standalone-2.46.0.jar"/>
-        <pathelement location="lib/jgraph-5.13.0.0.jar"/>
-        <pathelement location="lib/jgrapht-core-0.9.1.jar"/>
-        <pathelement location="lib/jgrapht-ext-0.9.1.jar"/>
-        <pathelement location="lib/jgrapht-ext-0.9.1-uber.jar"/>
-        <pathelement location="lib/jgraphx-2.0.0.1.jar"/>
-        <pathelement location="lib/javax.mail.jar"/>
-    </path>
-    <target name="init">
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src">
-                <exclude name="**/*.launch"/>
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="clean">
-        <delete dir="bin"/>
-    </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src"/>
-            <classpath refid="KGML-Stuff.classpath"/>
-        </javac>
-    </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-        <copy todir="${ant.library.dir}">
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </copy>
-        <unzip dest="${ant.library.dir}">
-            <patternset includes="jdtCompilerAdapter.jar"/>
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </unzip>
-    </target>
-    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-        <antcall target="build"/>
-    </target>
-    <target name="AWTConsole">
-        <java classname="bsh.util.AWTConsole" failonerror="true" fork="yes">
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="KOextraction (2)">
-        <java classname="KOExtraction.KOextraction" failonerror="true" fork="yes">
-            <arg line="-f 511145.12.PATRIC.faa -o Bacteria_879462.4.PATRIC/csv/Seq_KO -r"/>
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="KOSearch">
-        <java classname="KOSearch.KOSearch" failonerror="true" fork="yes">
-            <arg line="-i Data\CSV\Seq_KO.csv -o Data -r"/>
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="ParserTester (1)">
-        <java classname="KGMLParser.ParserTester" failonerror="true" fork="yes">
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="ShortestPathtoGraph">
-        <java classname="sun.applet.AppletViewer" dir="." failonerror="true" fork="yes">
-            <arg line="ShortestPathtoGraph.html"/>
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="TransformToGraph (1)">
-        <java classname="sun.applet.AppletViewer" dir="." failonerror="true" fork="yes">
-            <arg line="TransformToGraph (1).html"/>
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="TransformToGraph">
-        <java classname="TrasnformToGraph.TransformToGraph" failonerror="true" fork="yes">
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="TrasnformToGraph">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <classpath refid="KGML-Stuff.classpath"/>
-        </junit>
-    </target>
-    <target name="SendMail">
-        <java classname="EmailErrors.SendMail" failonerror="true" fork="yes">
-            <classpath refid="KGML-Stuff.classpath"/>
-        </java>
-    </target>
-    <target name="junitreport">
-        <junitreport todir="${junit.output.dir}">
-            <fileset dir="${junit.output.dir}">
-                <include name="TEST-*.xml"/>
-            </fileset>
-            <report format="frames" todir="${junit.output.dir}"/>
-        </junitreport>
+<project default="create_run_jar" name="Create Runnable Jar for Project KGML-Stuff">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/.."/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/kgml.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="KOSearch.KOSearch"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.jarfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/selenium-server-standalone-2.46.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgraph-5.13.0.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgrapht-core-0.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgrapht-ext-0.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgrapht-ext-0.9.1-uber.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgraphx-2.0.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/javax.mail.jar"/>
+        </jar>
     </target>
 </project>

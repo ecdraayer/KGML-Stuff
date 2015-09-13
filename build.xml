@@ -59,6 +59,7 @@
         <jar destfile="kgml.jar">
             <manifest>
                 <attribute name="Class-Path" value=". lib/selenium-server-standalone-2.46.0.jar"/>
+				<attribute name="Class-Path" value=". javax.mail.jar"/>
             </manifest>
             <fileset dir="${build}"/>
         </jar>

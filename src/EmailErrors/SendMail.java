@@ -29,7 +29,7 @@ public class SendMail {
 		// TODO Auto-generated method stub
 
 	      // Sender's email ID needs to be mentioned
-	      String from = "KOExtraction@nmsu.edu";
+	      String from = "PathwayProject@nmsu.edu";
 
 	      // Assuming you are sending email from localhost
 	      String host = "smtp.nmsu.edu";
@@ -39,12 +39,12 @@ public class SendMail {
 
 	      // Setup mail server
 	      properties.setProperty("mail.smtp.host", host);
-	      properties.setProperty("mail.smtp.port", "587");
-	      properties.setProperty("mail.smtp.auth", "true");
-	      properties.setProperty("mail.smtp.starttls.enable", "true");
+	      //properties.setProperty("mail.smtp.port", "587");
+	      //properties.setProperty("mail.smtp.auth", "true");
+	      //properties.setProperty("mail.smtp.starttls.enable", "true");
 
 	      // Get the default Session object.
-	      Session session = Session.getInstance(properties, new Authenticate());
+	      Session session = Session.getDefaultInstance(properties);
 	
 	 
 

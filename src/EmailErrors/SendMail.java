@@ -72,6 +72,8 @@ public class SendMail {
 	         System.out.println("Sent message successfully....");
 	      }catch (MessagingException mex) {
 	         mex.printStackTrace();
+	         
+	         
 	      }
 	}
 	private static ArrayList<String> ReadEmailLst()	

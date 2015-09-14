@@ -1,87 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="all" name="Create Runnable Jar for Project infdetection with libraries in sub-folder">
-	<property name="src" location="src"/>
-	<property name="build" location="bin"/>
-	<property name="dist"  location="."/>
-	<property name="lib"  location="lib"/>
-	<property name="docs"  location="javadoc"/>
-	
-	<!--
-	<path id="external.jars">
-		<fileset dir="${lib}" includes="**/*.jar"/>
-	</path>
-	-->
-	
-	<path id="project.classpath">
-		<!--
-		<pathelement location="${src}"/>
-		<path refid="external.jars" />
-		-->
-		<pathelement location="${build}"/>
-		<fileset dir="${lib}">
-			<include name="*.jar"/>
-		</fileset>
-	</path>
-	
-	<target name="clean">
-		<echo message="Delete dir ${build}"/>
-		<delete dir="${build}"/>
-		<!--
-		<echo message="Delete jar file ${dist}/infdetection.jar"/>
-		<delete file ="${dist}/infdetection.jar"/> -->
-	</target>
-
-	<target name="init" depends="clean">
-		<echo message="Create directory ${build}"/>
-		<mkdir dir="${build}"/>
-	</target>
-
-	<!-- depends="init" -->
-	<target name="compile" description="compile the source ">
-	    <!-- Compile the java code from ${src} into ${build} -->
-		<!--<javac srcdir="${src}" destdir="${build}"/>-->
-		
-		<echo message="${ant.project.name}: ${ant.file}"/>
-		<javac debug="true"
-			srcdir="${src}"
-			destdir="${build}"
-			source="1.7"
-			includeantruntime="false">
-			<classpath refid="project.classpath"/>
-		</javac>
-	</target>
-	
-    <target name="build">
-    	<echo message="Delete jar file ${dist}/kgml.jar"/>
-    	<delete file ="${dist}/kgml.jar"/>
-    	
-    	<echo message="Re-create jar file ${dist}/kgml.jar"/>
-        <jar destfile="kgml.jar">
+<project default="create_run_jar" name="Create Runnable Jar for Project KGML-Stuff">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/.."/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/kgml.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Class-Path" value=". lib/selenium-server-standalone-2.46.0.jar"/>
-				<attribute name="Class-Path" value=". javax.mail.jar"/>
+                <attribute name="Main-Class" value="KOSearch.KOSearch"/>
+                <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="${build}"/>
+            <fileset dir="${dir.jarfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/selenium-server-standalone-2.46.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgraph-5.13.0.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgrapht-core-0.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgrapht-ext-0.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgrapht-ext-0.9.1-uber.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jgraphx-2.0.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/javax.mail.jar"/>
         </jar>
     </target>
-	
-	<target name="javadoc">
-			<echo>Deleting old javadocs</echo>
-			<delete dir="${docs}"/>
-			<echo>Creating javadoc directory</echo>
-			<mkdir dir="${docs}"/>
-			
-			<echo>Generating javadocs</echo>
-			<javadoc destdir="${docs}" windowtitle="Influence detection" private="true">
-				<fileset dir="${src}/convergence">
-					<include name="*.java"/>
-				</fileset> 
-			</javadoc>
-	</target>
-	
-	
-	
-	<target name="all" depends="init,compile,build">
-	</target>
-	
 </project>

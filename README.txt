@@ -18,6 +18,13 @@ src: source code
 		Example Pathway URL
 		http://www.genome.jp/dbget-bin/www_bget?ko00904
 		
+	 *	EmailErrors: written by Raul
+		SendMail.Java
+		This is class is used to send email whenever a error occurs on the application.  It's mostly called from a try-catch block.
+		Takes two arguments, program name and body of email.  Reads recipients list from file maillist.lst, each line is a new email address.
+		The From email address is PathwayProject@nmsu.edu.
+		
+		It is utilizing port 25 to communicate with smtp.nmsu.edu , it might not work on a home network since ISP block port 25. As an alternative we can use port 587 but it requires authentication.
 		
      * ParserTester: written by Erick Draayer
        To Compile and Run:
@@ -50,7 +57,15 @@ Steps to run Raul's code to download pathways from sequence files (by Raul)
 		
 		 For Example:
 		   -i Data\CSV\Seq_KO.csv -o Data\ -r
-
+	EmailErrors
+	Call from class like this.
+			SendMail email= new SendMail();
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			
+			System.out.println("**Error**" + e.toString() +"\n" + sw.toString());
+			email.send("KOExtraction",sw.toString());
 ================================================================================================
 Steps to run Erick’s code (by Erick)
 

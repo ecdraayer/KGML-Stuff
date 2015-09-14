@@ -99,7 +99,7 @@ public class KOextraction {
 			        	Bsearch.Search(fasta.sequences.get(i),k);
 			        	
 			        	ArrayList<String> DistKOs = new  ArrayList<String> ();
-			        	DistKOs =Bsearch.ReturnDistinctValues(20);
+			        	DistKOs =Bsearch.ReturnDistinctValues(2);
 			        	ArrayList<String> KONums = new  ArrayList<String> ();
 			        	KONums=Bsearch.Returncolumn(2);
 			        	ArrayList<String> OrgIds = new  ArrayList<String> ();

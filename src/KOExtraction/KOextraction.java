@@ -68,9 +68,6 @@ public class KOextraction {
 					j++;
 				}
 					
-			
-				SendMail email= new SendMail();
-				email.send("KOExtraction","test");
 				if (output.isEmpty()==false && fastaname.isEmpty()==false)
 				{
 			        ParseFasta fasta = new ParseFasta(fastaname);

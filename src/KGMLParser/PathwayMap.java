@@ -1,7 +1,12 @@
 package KGMLParser;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
+
+import org.apache.commons.io.filefilter.FileFileFilter;
+
+import com.mxgraph.model.mxGraphModel.Filter;
 
 
 public class PathwayMap {
@@ -10,12 +15,20 @@ public class PathwayMap {
 	ArrayList<Pathway> sublist; /*Sublist for the connections instance variable */
 
 	public PathwayMap(){
-		final File folder = new File("C:\\Users\\Raul\\Desktop\\Project\\KGML-Stuff\\Bacteria - 879462.4.PATRIC\\xmls"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
+		final File folder = new File("C:\\Users\\Raul\\Desktop\\Project\\KGML-Stuff\\Bacteria_879462.4.PATRIC\\xmls"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
+		
+		//return only xml files
+		FileFilter xmlFilter = new FileFilter() {
+			public boolean accept(File file) {
+				return file.getName().toLowerCase().endsWith(".xml");
+			}
+		};
 		pathways = new ArrayList<Pathway>(); 
         connections = new ArrayList<ArrayList<Pathway>>();
 		sublist = new ArrayList<Pathway>();
         
-    	for(final File fileEntry : folder.listFiles()){ /*For loop to go through all KGML files in folder(configured so that KGML files must be in same folder as java program */
+    	for(final File fileEntry : folder.listFiles(xmlFilter)){ /*For loop to go through all KGML files in folder(configured so that KGML files must be in same folder as java program */
+    	
     		Pathway pathway = new Pathway();
     		new MySaxParser(fileEntry.toString(), pathway); /* Call parser */
             pathways.add(pathway);   		

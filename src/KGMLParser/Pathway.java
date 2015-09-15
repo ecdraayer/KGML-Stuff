@@ -116,13 +116,27 @@ public class Pathway {
 	  	 }
 	  	 return name;
      }
-	 public String GetXvalue(String name){
-	  	 String x = "";
+	 public String GetPathwayNameFromGene(String name){
+	  	 String pathname = "";
 	  	 for(Kegg_Entry k : entryL){
 	  		 if(name.equals(k.getName()))
-	  			x=k.graphInfo.x;
+	  		 {
+	  			pathname=this.name;
+	  			break; 
+	  		 }
 	  	 }
-	  	 return x;
+	  	 return pathname;
+     }
+	 public Kegg_Entry GetPathwayFromGene(String name){
+		 Kegg_Entry entry = new Kegg_Entry(); 
+	  	 for(Kegg_Entry k : entryL){
+	  		 if(name.equals(k.getName()))
+	  		 {
+	  			entry=k;
+	  			break; 
+	  		 }
+	  	 }
+	  	 return entry;
      }
 	 
 	 public void getStats(){

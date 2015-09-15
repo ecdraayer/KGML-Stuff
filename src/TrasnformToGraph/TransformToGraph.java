@@ -1,7 +1,6 @@
 package TrasnformToGraph;
 
 
-import com.mxgraph.layout.*;
 import com.mxgraph.swing.*;
 
 import KGMLParser.Kegg_Entry;
@@ -32,7 +31,10 @@ import org.jgrapht.graph.*;
 public class TransformToGraph extends JApplet {
 
 	/**
-	 * This class transforms pathways(kgmls) to graphs
+	 * This class transforms pathways(kgmls) to graphs.  Reads xml data from KGMLParser.PathwayMap.
+	 * Adds genes, compounds, relations and reactions.
+	 * Genes and compounds of the same pathway are same color, but genes are a lighter tone.
+	 * Each Pathway has its one specific random color
 	 *   @author Raul Alvarado
 	 */
 	private static final long serialVersionUID = 7980400801849305625L;
@@ -40,7 +42,7 @@ public class TransformToGraph extends JApplet {
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
     private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
 
-    
+    static PathwayMap Organism = new PathwayMap();   
 	static ListenableGraph<String, DefaultEdge> g =new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 
 	public static void main(String[] args) {
@@ -57,21 +59,39 @@ public class TransformToGraph extends JApplet {
         frame.setVisible(true);
 
    
-        String Gene1="",Gene2="";
-        QueryGenerator Query = new QueryGenerator();
+        String[] Gene1,Gene2;
+        QueryGenerator Query = new QueryGenerator(Organism);
         
         Gene1= Query.GetRandomGene();
-        System.out.println("Shortest path from " + "ko:K01184" + " to " + "ko:K01184" );
-	    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, "ko:K01184", "ko:K00039");
+        Gene2= Query.GetRandomGene();
+        //Gene1[1]="ko:K00039";
+        //Gene2[1]="ko:K03082";	
+        
+        System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0]);
+	    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
 	    
 	    if (path != null )
 	    {
-		    System.out.println(path);
-		    ShortestPathtoGraph SG= new ShortestPathtoGraph();
-		    SG.CreateGraph(path);
+		    if (path.size()>0 )
+		    {
+			    System.out.println(path);
+			    ShortestPathtoGraph SG= new ShortestPathtoGraph();
+			    SG.CreateGraph(path, Organism.pathways);
+			    
+			    
+			    
+			    int NoPathways=Query.DistinctPathways(path).size();
+			    Query.OutputResults(Gene1[1], Gene2[1], path.size(), NoPathways);
+			    
+		    }
+		    else
+		    	System.out.println("No path found");
 	    }
 	    else
 	    	System.out.println("No path found");
+	    
+
+	    
 	    
 	}
 
@@ -95,10 +115,11 @@ public class TransformToGraph extends JApplet {
 	
 	private void AddVerticesAndEdges()
 	{
-		PathwayMap Organism = new PathwayMap();        
+		     
     	ArrayList<Pathway> pathways = Organism.pathways;
     	Color col= null;
     	for(Pathway cpway : pathways){
+    	
     		col=GenerateColor();
     		if (cpway.getName() != null)
 			{

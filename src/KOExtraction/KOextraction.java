@@ -106,7 +106,7 @@ public class KOextraction {
 			        	
 			        	System.out.println(i +": KO Number: " + Arrays.toString(DistKOs.toArray()) + " for " + fasta.descriptions.get(i) );
 			        	
-			        	try {
+			        	
 			        		for (int i1=0 ; i1 < KONums.size();i1++)
 				        	{
 								Csv.WriteFieldCSV(Integer.toString(i), 0);
@@ -119,11 +119,7 @@ public class KOextraction {
 				        	}
 			        	
 			        		
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}	        	
-	
+						
 			        }
 			        Csv.closeCSV();
 			        System.out.println("Finished processing " + fastaname.toString());
@@ -139,7 +135,17 @@ public class KOextraction {
 			}
 		
 		}
-		catch (Exception e)
+		catch(IOException e)
+		{
+			SendMail email= new SendMail();
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			
+			System.out.println("**Error**" + e.toString() +"\n" + sw.toString());
+			email.send("KOExtraction",sw.toString());
+		}
+		catch (Exception  e )
 		{
 			SendMail email= new SendMail();
 			StringWriter sw = new StringWriter();

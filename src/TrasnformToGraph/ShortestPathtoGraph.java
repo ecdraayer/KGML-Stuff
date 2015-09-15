@@ -13,8 +13,10 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -28,31 +30,37 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
+/**
+ * This class generates a graphical representation from the shortest path calculated in TransformtoGraph.
+ * Takes path as parameter and creates visual representation.
+ * @author Raul Alvarado
+ *
+ */
 public class ShortestPathtoGraph extends JApplet {
 
 	private static final long serialVersionUID = 7980400801849305625L;
 	private static final Dimension DEFAULT_SIZE = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
     private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
+    int numberofpathways =0;
 
-
-    ListenableGraph<String, DefaultEdge> g ;
+    static ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 
 	public ShortestPathtoGraph ()
 	{
-		this.g= new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 
+	
 		//ShortestPathtoGraph applet2 = new ShortestPathtoGraph();
 		//applet2.CreateGraph();
 		//this.path = Path;
 		init();
 		
-		JFrame frame = new JFrame();
-        frame.getContentPane().add(this);		
-        frame.setTitle("Shortest path graph");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+	     JFrame frame = new JFrame();
+	     frame.getContentPane().add(this);		
+	     frame.setTitle("Shortest path graph");
+	     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	     frame.pack();
+	     frame.setVisible(true);
 
 	}
 	public void init()
@@ -67,30 +75,57 @@ public class ShortestPathtoGraph extends JApplet {
         getContentPane().add(jgraph);
         resize(DEFAULT_SIZE);
         
+   
         
     
     }
-	public void CreateGraph(List<DefaultEdge>  path)
+	public void CreateGraph(List<DefaultEdge>  path, ArrayList<Pathway>  pathways)
     {
-		int posx=0;
-		int posy=0;
+		String posx="", posx2="";
+		String posy="", posy2="";
 		for (int i=0; i<path.size();i++)
 		{
 		    String[] vertex = path.get(i).toString().split(" : ");
 		    vertex[0]= vertex[0].replace("(", "");
 		    vertex[1]= vertex[1].replace(")", "");	
-	
 		    g.addVertex(vertex[0]);
 		    g.addVertex(vertex[1]);
 		    g.addEdge(vertex[0],vertex[1]);
+		 
 		    
-		    positionVertexAt(vertex[0],posx, posy );
-		    posx+=190;
-		    posy+=130;
-		    positionVertexAt(vertex[1],posx, posy );
+		    Kegg_Entry entry= new Kegg_Entry();
+		    Kegg_Entry entry2= new Kegg_Entry();
+		    for(Pathway cpway : pathways){
+		        
+		        if (cpway.GetPathwayFromGene(vertex[0]).GetGraph() != null)
+		        	entry= cpway.GetPathwayFromGene(vertex[0]); 
+			   
+		        if (cpway.GetPathwayFromGene(vertex[1]).GetGraph() != null)
+		        	entry2=cpway.GetPathwayFromGene(vertex[1]);
+			
+		    }
+		    
+		
+		    
+		    
+		    
+		    posx=entry.GetGraph().getX();
+		    posx2=entry2.GetGraph().getX(); 
+		    posy=entry.GetGraph().getY();
+		    posy2=entry2.GetGraph().getY();
+		    positionVertexAt(vertex[0],Integer.parseInt(posx), Integer.parseInt(posy) );
+		   // posx+=160;
+		   // posy+=100;
+		    positionVertexAt(vertex[1],Integer.parseInt(posx2), Integer.parseInt(posy) );
+		    
+		    
+		    
+
 		}
 	 
     }
+
+	@SuppressWarnings("unchecked")
 	private void positionVertexAt(Object vertex, int x, int y )
     {
 		 DefaultGraphCell cell = jgAdapter.getVertexCell(vertex);

@@ -151,7 +151,8 @@ public class TransformToGraph extends JApplet {
     			System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
     		}
     		for(Reaction r : cpway.getReactionL()){
-    			g.addEdge( r.getSubstrate().get(0).getName(),  r.getProduct().get(0).getName());
+    			if (g.containsVertex(r.getSubstrate().get(0).getName()) && g.containsVertex(r.getProduct().get(0).getName()) )
+    				g.addEdge( r.getSubstrate().get(0).getName(),  r.getProduct().get(0).getName());
     			System.out.println("Reaction " + r.getId() +" Subtrate " + r.getSubstrate().get(0).getName() + " Product "  + r.getProduct().get(0).getName()  );
     		} 		 
     		
@@ -164,7 +165,7 @@ public class TransformToGraph extends JApplet {
 
 	
 	 @SuppressWarnings("unchecked")
-	 ArrayList<Integer> count= new ArrayList<Integer>();
+
 	private void positionVertexAt(Object vertex, int x, int y, Color color, Color FColor )
 	    {
 		
@@ -175,8 +176,7 @@ public class TransformToGraph extends JApplet {
 	        attr.applyValue(GraphConstants.BACKGROUND, color);
 	        attr.applyValue(GraphConstants.FOREGROUND, FColor);
 	        Rectangle2D bounds = GraphConstants.getBounds(attr);
-	        
-	    
+
 	 
 	        
 	        Rectangle2D newBounds =

@@ -11,10 +11,15 @@ public class Graph {
     String height;
     
     public Graph(String name, String fgcolor, String bgcolor, String type, String x, String y, String width, String height){
+    	if (x == null)
+    		x="0";
+    	if (y == null)
+    		y="0";
     	this.name = name;
     	this.fgcolor = fgcolor;
     	this.bgcolor = bgcolor;
     	this.type = type;
+    
     	this.x = x;
     	this.y = y;
     	this.width = width;

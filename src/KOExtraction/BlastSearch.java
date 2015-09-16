@@ -38,7 +38,7 @@ public class BlastSearch {
 	
 		 maxnumber.submit();
 
-		 
+
 		
 		 WebElement a 	 = driver.findElement(By.tagName("form"));
 		 
@@ -94,6 +94,7 @@ public class BlastSearch {
 				 }
 			 }
 		 }
+		driver.close();
 		
 		return table;
 		 

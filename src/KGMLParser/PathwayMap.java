@@ -14,8 +14,8 @@ public class PathwayMap {
 	ArrayList<ArrayList<Pathway>> connections; /*Stores the information on which pathways are connected to eachother */
 	ArrayList<Pathway> sublist; /*Sublist for the connections instance variable */
 
-	public PathwayMap(){
-		final File folder = new File("C:\\Users\\Raul\\Desktop\\Project\\KGML-Stuff\\Bacteria_879462.4.PATRIC"); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
+	public PathwayMap(String path){
+		final File folder = new File(path); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
 		
 		//return only xml files
 		FileFilter xmlFilter = new FileFilter() {

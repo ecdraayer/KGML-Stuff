@@ -15,7 +15,7 @@ public class ParserTester {
 	
 	/* Main function to call parse and write for testing */
 	public static void main(String[] args) throws IOException {
-    	PathwayMap Organism = new PathwayMap();
+    	PathwayMap Organism = new PathwayMap(null);
     	Organism.getTotalStats();
     	//ListGenes.Listgenes(Organism.pathways);
     	//Organism.isConnected();

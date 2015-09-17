@@ -1,4 +1,4 @@
-package TrasnformToGraph;
+package TransformToGraph;
 
 import com.mxgraph.layout.*;
 import com.mxgraph.swing.*;
@@ -44,7 +44,7 @@ public class ShortestPathtoGraph extends JApplet {
     private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
     int numberofpathways =0;
 
-    static ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+    static ListenableGraph<String, DefaultEdge> g ;
 
 	public ShortestPathtoGraph ()
 	{
@@ -66,7 +66,7 @@ public class ShortestPathtoGraph extends JApplet {
 	public void init()
     {
 		 // create a JGraphT graph
-	
+		g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 		 // create a visualization using JGraph, via an adapter
 		jgAdapter = new JGraphModelAdapter<String, DefaultEdge>(g);
 		JGraph jgraph = new JGraph(jgAdapter);
@@ -116,7 +116,7 @@ public class ShortestPathtoGraph extends JApplet {
 		    positionVertexAt(vertex[0],Integer.parseInt(posx), Integer.parseInt(posy) );
 		   // posx+=160;
 		   // posy+=100;
-		    positionVertexAt(vertex[1],Integer.parseInt(posx2), Integer.parseInt(posy) );
+		    positionVertexAt(vertex[1],Integer.parseInt(posx2), Integer.parseInt(posy2) );
 		    
 		    
 		    

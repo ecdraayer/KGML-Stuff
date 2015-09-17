@@ -1,4 +1,4 @@
-package TrasnformToGraph;
+package TransformToGraph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,11 +46,17 @@ public class QueryGenerator {
 		
 		return Genedata;
 	}
-	public void OutputResults(String Gene1, String Gene2, int NoEdges, int pathwayNumber)
+	public void OutputResults(String[][] ToPrint)
 	{
 		  
-		System.out.println("q1 \t\t q2 \t\t  edgeNum \t\t pathwayNumber "  );
-		System.out.println(Gene1 + "\t" + Gene2 + "\t\t" + NoEdges + "\t\t" + pathwayNumber   );
+		System.out.println("q1 \t\t\t q2 \t\t  edgeNum \t\t pathwayNumber "  );
+		
+		for (String[] s: ToPrint)
+		{
+			System.out.println(s[0] + "\t\t" + s[1]  + "\t\t" + s[2]  + "\t\t" + s[3]    );
+		}
+		
+		
 	}
 	/**
 	 * @param path

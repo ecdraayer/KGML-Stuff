@@ -1,4 +1,4 @@
-package TrasnformToGraph;
+package TransformToGraph;
 
 
 import com.mxgraph.swing.*;
@@ -42,56 +42,107 @@ public class TransformToGraph extends JApplet {
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
     private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
 
-    static PathwayMap Organism = new PathwayMap();   
-	static ListenableGraph<String, DefaultEdge> g =new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+    static PathwayMap Organism;    
+	static ListenableGraph<String, DefaultEdge> g ;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		TransformToGraph applet = new TransformToGraph();
-		applet.init();
+		
+		String xmlFolder="";
+		Integer k=10;
+		int j=0;
+
 		
 
-		JFrame frame = new JFrame();
-        frame.getContentPane().add(applet);		
-        frame.setTitle("Pathway graph");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-
-   
-        String[] Gene1,Gene2;
-        QueryGenerator Query = new QueryGenerator(Organism);
-        
-        Gene1= Query.GetRandomGene();
-        Gene2= Query.GetRandomGene();
-        //Gene1[1]="ko:K00039";
-        //Gene2[1]="ko:K03082";	
-        
-        System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0]);
-	    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
-	    
-	    if (path != null )
-	    {
-		    if (path.size()>0 )
-		    {
-			    System.out.println(path);
-			    ShortestPathtoGraph SG= new ShortestPathtoGraph();
-			    SG.CreateGraph(path, Organism.pathways);
-			    
-			    
-			    
-			    int NoPathways=Query.DistinctPathways(path).size();
-			    Query.OutputResults(Gene1[1], Gene2[1], path.size(), NoPathways);
-			    
-		    }
-		    else
-		    	System.out.println("No path found");
-	    }
-	    else
-	    	System.out.println("No path found");
-	    
-
-	    
+		if (args.length >= 0)
+		{
+			while (j < args.length)
+			{
+				 
+				if (args[j].equals("-f"))
+				{
+					xmlFolder=args[j+1];
+				}
+				if (args[j].equals("-k"))
+				{
+					k=Integer.parseInt(args[j+1]);
+				}
+				j++;
+				
+			}
+		}
+		else			
+		{
+			System.out.println("Please provide appropriate arguments");
+			System.out.println("-f folder containing KGML files -k Number of random queries(default 10)");
+			System.exit(1);
+		}
+		
+		if (xmlFolder.isEmpty()==false)
+		{
+			Organism = new PathwayMap(System.getProperty("user.dir") + xmlFolder);
+			g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+			// TODO Auto-generated method stub
+			TransformToGraph applet = new TransformToGraph();
+			applet.init();
+			
+	
+			JFrame frame = new JFrame();
+	        frame.getContentPane().add(applet);		
+	        frame.setTitle("Pathway graph");
+	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        frame.pack();
+	        frame.setVisible(true);
+	
+	   
+	        String[] Gene1,Gene2;
+	        QueryGenerator Query = new QueryGenerator(Organism);
+	        
+	        String[][] ToPrint= new String[k][4];
+	        		
+	        
+	        
+	        for (int i=0; i < 10; i++)
+	        {
+	        
+		        Gene1= Query.GetRandomGene();
+		        Gene2= Query.GetRandomGene();
+		        //Gene1[1]="ko:K00875";
+		        //Gene2[1]="ko:K03081";	
+		        
+		        System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0]);
+		        
+			    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
+			    ToPrint[i][0]=Gene1[1];
+			    ToPrint[i][1]=Gene2[1];
+			    if (path != null )
+			    {
+				    if (path.size()>0 )
+				    {
+					    System.out.println(path);
+					    ShortestPathtoGraph SG= new ShortestPathtoGraph();
+					    SG.CreateGraph(path, Organism.pathways);
+					    
+					    
+					    
+					    int NoPathways=Query.DistinctPathways(path).size();
+					    
+					
+					    ToPrint[i][2]= Integer.toString(path.size());
+					    ToPrint[i][3]= Integer.toString(NoPathways);
+					  
+					    
+				    }
+				    else
+				    	System.out.println("No path found");
+			    }
+			    else
+			    	System.out.println("No path found");
+		    
+	        }
+	        //print results
+	        Query.OutputResults(ToPrint);
+	        
+		}
 	    
 	}
 
@@ -148,12 +199,12 @@ public class TransformToGraph extends JApplet {
     		for(Relation r : cpway.getRelationL()){ 
     		
     			g.addEdge( cpway.GetNameFromId(r.getEntry1()), cpway.GetNameFromId(r.getEntry2()));
-    			System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
+    			//System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
     		}
     		for(Reaction r : cpway.getReactionL()){
     			if (g.containsVertex(r.getSubstrate().get(0).getName()) && g.containsVertex(r.getProduct().get(0).getName()) )
     				g.addEdge( r.getSubstrate().get(0).getName(),  r.getProduct().get(0).getName());
-    			System.out.println("Reaction " + r.getId() +" Subtrate " + r.getSubstrate().get(0).getName() + " Product "  + r.getProduct().get(0).getName()  );
+    			//System.out.println("Reaction " + r.getId() +" Subtrate " + r.getSubstrate().get(0).getName() + " Product "  + r.getProduct().get(0).getName()  );
     		} 		 
     		
     	}

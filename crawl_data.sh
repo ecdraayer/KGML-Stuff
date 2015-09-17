@@ -10,4 +10,4 @@ java -cp kgml.jar KOExtraction.KOextraction -f ../pathway/patric_downloads/13857
 
 
 # Run Raul's TransformToGraph
-java -cp kgml.jar TransformToGraph.TransformToGraph -f /Bacteria_879462.4.PATRIC/xmls
+java -cp kgml.jar TransformToGraph.TransformToGraph -f ../pathway/Bacteria_879462.4.PATRIC

@@ -50,8 +50,6 @@ public class KOSearch {
 						if (args[r+1].contains("-")==false)
 						{
 							OutputPath=args[r+1];
-							if (OutputPath.endsWith("\\")==false)
-								OutputPath=OutputPath+"";
 							
 						}
 					}
@@ -91,7 +89,7 @@ public class KOSearch {
 			     
 			
 			     
-			     ExportCsv Csv = new ExportCsv(OutputPath + "/KO_mapid.csv", contd,"gene_KO_number,pathway_id, pathway_url, KGML");
+			     ExportCsv Csv = new ExportCsv(OutputPath + "KO_mapid.csv", contd,"gene_KO_number,pathway_id, pathway_url, KGML");
 			     
 			     for (int i=0; i < KOnums.size(); i++)
 			     {

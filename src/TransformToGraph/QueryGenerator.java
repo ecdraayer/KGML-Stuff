@@ -1,5 +1,6 @@
 package TransformToGraph;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import KGMLParser.Pathway;
 import KGMLParser.PathwayMap;
+import KOExtraction.ExportCsv;
 
 /**
  * This class is used to generate queries from one random gene to another random gene. Genes may or may not be from different pathways.
@@ -48,13 +50,35 @@ public class QueryGenerator {
 	}
 	public void OutputResults(String[][] ToPrint)
 	{
-		  
+		 
+		ExportCsv Csv = new ExportCsv("output.txt", false,"q1,q2,edgeNum,pathwayNumber");
+		
+		
 		System.out.println("q1 \t\t\t q2 \t\t  edgeNum \t\t pathwayNumber "  );
 		
+
 		for (String[] s: ToPrint)
 		{
+			if (s[2]==null)
+				s[2]="";
+			if (s[3]==null)
+				s[3]="";
 			System.out.println(s[0] + "\t\t" + s[1]  + "\t\t" + s[2]  + "\t\t" + s[3]    );
+			
+			try {
+				Csv.WriteFieldCSV(s[0] ,0);
+				Csv.WriteFieldCSV(s[1] ,0);
+				Csv.WriteFieldCSV(s[2] ,0);
+				Csv.WriteFieldCSV(s[3] ,0);
+				Csv.WriteFieldCSV("" ,1);
+				Csv.FlushCSV();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		}
+		  Csv.closeCSV();
 		
 		
 	}

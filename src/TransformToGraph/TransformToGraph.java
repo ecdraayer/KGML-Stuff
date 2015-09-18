@@ -101,7 +101,7 @@ public class TransformToGraph extends JApplet {
 	        		
 	        
 	        
-	        for (int i=0; i < 10; i++)
+	        for (int i=0; i < k; i++)
 	        {
 	        
 		        Gene1= Query.GetRandomGene();
@@ -141,7 +141,7 @@ public class TransformToGraph extends JApplet {
 	        }
 	        //print results
 	        Query.OutputResults(ToPrint);
-	        
+	        System.out.println("Done!");
 		}
 	    
 	}

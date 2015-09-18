@@ -51,7 +51,7 @@ public class KOSearch {
 						{
 							OutputPath=args[r+1];
 							if (OutputPath.endsWith("\\")==false)
-								OutputPath=OutputPath+"/";
+								OutputPath=OutputPath+"";
 							
 						}
 					}

@@ -70,6 +70,7 @@ public class GetPathway {
 			}
 			
 		}
+		driver.close();
 		return table;
 
 		

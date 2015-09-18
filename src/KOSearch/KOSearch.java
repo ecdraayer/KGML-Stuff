@@ -137,11 +137,11 @@ public class KOSearch {
 					    	     {
 					    	    	
 					    	    	 try {
-					    				String  downloadedFileAbsoluteLocation = downloadFile.downloadFile(downloadLink.get(0), "\\" + OutputPath +  Pathways.get(j).get(0).replace("/", "-")+".xml");
+					    				String  downloadedFileAbsoluteLocation = downloadFile.downloadFile(downloadLink.get(0), OutputPath +  Pathways.get(j).get(0).replace("/", "-")+".xml");
 					    				System.out.println("Downloading "+ Pathways.get(j).get(0) + "File to " + downloadedFileAbsoluteLocation);
 					    				
 					    				//download png file
-					    				String  pnglocation = downloadFile.downloadImage(pngdownload,"\\" + OutputPath +  Pathways.get(j).get(0).replace("/", "-")+".png");
+					    				String  pnglocation = downloadFile.downloadImage(pngdownload, OutputPath +  Pathways.get(j).get(0).replace("/", "-")+".png");
 					    				System.out.println("Downloading PNG "+ Pathways.get(j).get(0) + "File to " + pnglocation);
 					    			} catch (Exception e1) {
 					    				// TODO Auto-generated catch block

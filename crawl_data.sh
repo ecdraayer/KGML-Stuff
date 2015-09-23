@@ -5,7 +5,7 @@
 #java -cp kgml.jar KOExtraction.KOextraction -f ../pathway/patric_downloads/1385755.6.PATRIC.faa -o ../pathway/Bacteria_1385755.6.PATRIC/csv/Seq_KO -r
 
 #Human sequence
-java -cp kgml.jar KOExtraction.KOextraction -f ../pathway/Human/Homo_sapiens.GRCh38.pep.all.fa -o ../pathway/Human/csv/Seq_KO -r
+java -cp kgml.jar KOExtraction.KOextraction -f ../pathway/Human/Homo_sapiens.GRCh38.pep.abinitio.fa -o ../pathway/Human/csv/Seq_KO -r
 
 
 

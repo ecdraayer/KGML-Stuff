@@ -30,7 +30,7 @@ public class BlastSearch {
 	{
 		 WebDriver driver = new HtmlUnitDriver();
 		 driver.get("http://www.genome.jp/tools-bin/search_sequence?prog=blastp");
-		 driver.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS);
+		 driver.manage().timeouts().pageLoadTimeout(300, TimeUnit.SECONDS);
 		 WebElement org = driver.findElement(By.name("sequence"));
 		 org.sendKeys(sequence);
 		 WebElement maxnumber = driver.findElement(By.name("V_value"));

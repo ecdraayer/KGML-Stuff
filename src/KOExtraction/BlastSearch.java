@@ -1,5 +1,6 @@
 package KOExtraction;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,14 +38,30 @@ public class BlastSearch {
 		 maxnumber.sendKeys(ktop);	 
 	
 		 maxnumber.submit();
-
-
-		
-		 WebElement a 	 = driver.findElement(By.tagName("form"));
-		 
 		 String Fulltext="";
-		 Fulltext= a.getText();
-		 Fulltext = Fulltext.substring(Fulltext.indexOf("definitions")+12, Fulltext.length());
+
+		 //wait until loading/searching windows goes away
+		 while (driver.getTitle().contains("running"))
+		 {
+			 try {
+
+				TimeUnit.MINUTES.sleep(2);
+				driver.navigate().refresh();
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		 }
+
+		WebElement a 	 = driver.findElement(By.tagName("form"));
+			
+		Fulltext= a.getText();
+		Fulltext = Fulltext.substring(Fulltext.indexOf("definitions")+12, Fulltext.length());
+
+		 
+		
 		 		 
 		 
 		 

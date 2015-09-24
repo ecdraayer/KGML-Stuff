@@ -60,9 +60,9 @@ public class QueryGenerator {
 		for (String[] s: ToPrint)
 		{
 			if (s[2]==null)
-				s[2]="";
+				s[2]=" ";
 			if (s[3]==null)
-				s[3]="";
+				s[3]=" ";
 			System.out.println(s[0] + "\t\t" + s[1]  + "\t\t" + s[2]  + "\t\t" + s[3]    );
 			
 			try {

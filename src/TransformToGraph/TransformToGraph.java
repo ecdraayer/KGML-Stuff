@@ -50,7 +50,7 @@ public class TransformToGraph extends JApplet {
 		String xmlFolder="";
 		Integer k=10;
 		int j=0;
-
+		boolean nv=true;
 		
 
 		if (args.length >= 0)
@@ -66,6 +66,10 @@ public class TransformToGraph extends JApplet {
 				{
 					k=Integer.parseInt(args[j+1]);
 				}
+				if (args[j].equals("-nv"))
+				{
+					nv=false;
+				}
 				j++;
 				
 			}
@@ -73,7 +77,7 @@ public class TransformToGraph extends JApplet {
 		else			
 		{
 			System.out.println("Please provide appropriate arguments");
-			System.out.println("-f folder containing KGML files -k Number of random queries(default 10)");
+			System.out.println("-f folder containing KGML files -k Number of random queries(default 10) -nv no visual representation");
 			System.exit(1);
 		}
 		
@@ -94,49 +98,64 @@ public class TransformToGraph extends JApplet {
 	        frame.setVisible(true);
 	
 	   
-	        String[] Gene1,Gene2;
+	        String[] Gene1 = null,Gene2 = null, temp;
 	        QueryGenerator Query = new QueryGenerator(Organism);
 	        
-	        String[][] ToPrint= new String[k][4];
+	        String[][] ToPrint= new String[k*2][5];
 	        		
 	        
-	        
-	        for (int i=0; i < k; i++)
+	        for (int i=0; i < k*2; i++)
 	        {
-	        
-		        Gene1= Query.GetRandomGene();
-		        Gene2= Query.GetRandomGene();
+	            //search for path from both directions
+	        	if (i%2==0)
+	        	{
+			        Gene1= Query.GetRandomGene();
+			        Gene2= Query.GetRandomGene();
+	        	}
+	        	else
+	        	{
+	        		temp =Gene1;
+	        		Gene1=Gene2;
+	        		Gene2=	temp;
+	        	}
 		        //Gene1[1]="ko:K00875";
 		        //Gene2[1]="ko:K03081";	
-		        
-		        System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0]);
-		        
-			    List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
-			    ToPrint[i][0]=Gene1[1];
-			    ToPrint[i][1]=Gene2[1];
-			    if (path != null )
-			    {
-				    if (path.size()>0 )
+		   
+
+			    System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0]);
+			        
+				List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
+				ToPrint[i][0]=Gene1[1];
+				ToPrint[i][1]=Gene2[1];
+				    if (path != null )
 				    {
-					    System.out.println(path);
-					    ShortestPathtoGraph SG= new ShortestPathtoGraph();
-					    SG.CreateGraph(path, Organism.pathways);
-					    
-					    
-					    
-					    int NoPathways=Query.DistinctPathways(path).size();
-					    
-					
-					    ToPrint[i][2]= Integer.toString(path.size());
-					    ToPrint[i][3]= Integer.toString(NoPathways);
-					  
-					    
+					    if (path.size()>0 )
+					    {
+						    System.out.println(path);
+						    if (nv==true)
+						    {
+							    ShortestPathtoGraph SG= new ShortestPathtoGraph();
+							    SG.CreateGraph(path, Organism.pathways);
+						    }
+						    
+						    
+						    
+						    int NoPathways=Query.DistinctPathways(path).size();
+						    
+						
+						    ToPrint[i][2]= Integer.toString(path.size());
+						    ToPrint[i][3]= Integer.toString(NoPathways);
+						    ToPrint[i][4]= path.toString();
+						    
+					    }
+					    else
+					    	System.out.println("No path found");
 				    }
 				    else
 				    	System.out.println("No path found");
-			    }
-			    else
-			    	System.out.println("No path found");
+				    
+	
+		      
 		    
 	        }
 	        //print results

@@ -51,27 +51,45 @@ public class QueryGenerator {
 	public void OutputResults(String[][] ToPrint)
 	{
 		 
-		ExportCsv Csv = new ExportCsv("output.txt", false,"q1,q2,edgeNum,pathwayNumber");
+		ExportCsv Csv = new ExportCsv("outputConnected.csv", false,"q1,q2,edgeNum,pathwayNumber,ShortestPath");
 		
+		ExportCsv CsvNotCon = new ExportCsv("outputNotConnected.csv", false,"q1,q2,edgeNum,pathwayNumber,ShortestPath");
 		
-		System.out.println("q1 \t\t\t q2 \t\t  edgeNum \t\t pathwayNumber "  );
+		System.out.println("q1 \t\t\t q2 \t\t  edgeNum \t\t pathwayNumber \t\tShortestPath"  );
 		
 
 		for (String[] s: ToPrint)
 		{
-			if (s[2]==null)
-				s[2]=" ";
-			if (s[3]==null)
-				s[3]=" ";
+		
+
 			System.out.println(s[0] + "\t\t" + s[1]  + "\t\t" + s[2]  + "\t\t" + s[3]    );
 			
 			try {
-				Csv.WriteFieldCSV(s[0] ,0);
-				Csv.WriteFieldCSV(s[1] ,0);
-				Csv.WriteFieldCSV(s[2] ,0);
-				Csv.WriteFieldCSV(s[3] ,0);
-				Csv.WriteFieldCSV("" ,1);
-				Csv.FlushCSV();
+				if (s[2]==null && s[3]==null)
+				{
+					s[2]=" ";
+					s[3]=" ";
+					s[4]=" ";
+					CsvNotCon.WriteFieldCSV(s[0] ,0);
+					CsvNotCon.WriteFieldCSV(s[1] ,0);
+					CsvNotCon.WriteFieldCSV(s[2] ,0);
+					CsvNotCon.WriteFieldCSV(s[3] ,0);
+					CsvNotCon.WriteFieldCSV(s[4]  ,0);
+					CsvNotCon.WriteFieldCSV("" ,1);
+					CsvNotCon.FlushCSV();
+				}
+				else
+				{
+								
+					Csv.WriteFieldCSV(s[0] ,0);
+					Csv.WriteFieldCSV(s[1] ,0);
+					Csv.WriteFieldCSV(s[2] ,0);
+					Csv.WriteFieldCSV(s[3] ,0);
+					Csv.WriteFieldCSV("\"" + s[4] + "\""  ,0);
+					Csv.WriteFieldCSV("" ,1);
+					Csv.FlushCSV();
+				}
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -79,6 +97,7 @@ public class QueryGenerator {
 		
 		}
 		  Csv.closeCSV();
+		  CsvNotCon.closeCSV();
 		
 		
 	}

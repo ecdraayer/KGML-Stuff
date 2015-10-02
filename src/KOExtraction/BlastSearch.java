@@ -1,5 +1,6 @@
 package KOExtraction;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class BlastSearch {
 	{
 		 WebDriver driver = new HtmlUnitDriver();
 		 driver.get("http://www.genome.jp/tools-bin/search_sequence?prog=blastp");
-		 driver.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS);
+		 driver.manage().timeouts().pageLoadTimeout(360, TimeUnit.SECONDS);
 		 WebElement org = driver.findElement(By.name("sequence"));
 		 org.sendKeys(sequence);
 		 WebElement maxnumber = driver.findElement(By.name("V_value"));
@@ -37,14 +38,30 @@ public class BlastSearch {
 		 maxnumber.sendKeys(ktop);	 
 	
 		 maxnumber.submit();
+		 String Fulltext="";
+
+		 //wait until loading/searching windows goes away
+		 while (driver.getTitle().contains("running"))
+		 {
+			 try {
+
+				TimeUnit.MINUTES.sleep(2);
+				driver.navigate().refresh();
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		 }
+
+		WebElement a 	 = driver.findElement(By.tagName("form"));
+			
+		Fulltext= a.getText();
+		Fulltext = Fulltext.substring(Fulltext.indexOf("definitions")+12, Fulltext.length());
 
 		 
 		
-		 WebElement a 	 = driver.findElement(By.tagName("form"));
-		 
-		 String Fulltext="";
-		 Fulltext= a.getText();
-		 Fulltext = Fulltext.substring(Fulltext.indexOf("definitions")+12, Fulltext.length());
 		 		 
 		 
 		 
@@ -94,6 +111,7 @@ public class BlastSearch {
 				 }
 			 }
 		 }
+		driver.close();
 		
 		return table;
 		 

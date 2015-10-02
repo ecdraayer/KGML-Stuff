@@ -1,0 +1,7 @@
+Sep. 2 Chuan
+-----------------
+Issues:
+1.  The "openqa" library required by KOSearch.java is missing.
+2.  It is better to explain abbreviations (like "KO") before use them.  This documentation may help the student who will work on this project after you graduate.
+3.  The project "ant" file is not created.  
+4.  In "PathwayMap.java" line 78, comparison between String object should use ".euqals()" method.

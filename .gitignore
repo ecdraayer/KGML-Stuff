@@ -41,3 +41,7 @@ local.properties
 *.fasta
 *.faa
 Bacteria/
+Bacteria_879462.4.PATRIC/
+
+#jar file
+kgml.jar

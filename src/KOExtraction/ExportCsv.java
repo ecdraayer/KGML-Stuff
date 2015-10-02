@@ -1,6 +1,9 @@
 package KOExtraction;
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -15,7 +18,7 @@ import java.io.IOException;
 public class ExportCsv {
 
 	String Filename;
-	private String FILE_HEADER = "";
+	private String FILE_HEADER = "";	
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private FileWriter fileWriter = null;
@@ -25,12 +28,14 @@ public class ExportCsv {
 		this.FILE_HEADER=Header;
 		try {
 			fileWriter = new FileWriter(Filename,contd);
-			
-			if (contd==false)				
+	
+			if (contd==false)
+			{
 				fileWriter.append(FILE_HEADER.toString());
 			
-			//Add a new line separator after the header
-	        fileWriter.append(NEW_LINE_SEPARATOR);
+				//Add a new line separator after the header
+		        fileWriter.append(NEW_LINE_SEPARATOR);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,6 +46,7 @@ public class ExportCsv {
 		if (endofline==1)
 		{
 			fileWriter.append(NEW_LINE_SEPARATOR);
+			
 		}
 		else
 		{
@@ -49,6 +55,15 @@ public class ExportCsv {
 			fileWriter.append(COMMA_DELIMITER);
 
 		}	
+	}
+	public void FlushCSV()
+	{
+		try {
+			fileWriter.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public void closeCSV()
 	{
@@ -61,5 +76,31 @@ public class ExportCsv {
 		}
 
 
+	}
+	public void DeleteRows(String idxtoDel)
+	{
+		FileReader fileReader;
+		try {
+			fileReader = new FileReader(Filename);
+			BufferedReader br = new BufferedReader(fileReader);
+			String line="";
+			try {
+				while ((line = br.readLine()) != null) {
+					if (line.startsWith(idxtoDel)==false)
+					{
+						fileWriter.append(line);
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 }

@@ -155,7 +155,7 @@ public class FileDownloader {
  
         URL fileToDownload = new URL(fileToDownloadLocation);
         //changed by Raul
-        File downloadedFile = new File(this.localDownloadPath + "/data/" + Filename.replace("/", "-"));
+        File downloadedFile = new File(Filename);
         		//+ " fileToDownload.getFile().replaceFirst("/|\\\\", "").replace("?", ""));
      
         if (downloadedFile.canWrite() == false) downloadedFile.setWritable(true);

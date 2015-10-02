@@ -79,9 +79,11 @@ Steps to run Raul's code to download pathways from sequence files (by Raul)
 ================================================================================================
 Steps to run Erick’s code (by Erick)
 
+Generate CSV files for neo4j:
+
 Inverted list index generation: 
 
-parse KGML files??: 
+parse KGML files: 
 
 ================================================================================================
 Resource to get sequence (FASTA) files (from 08/06/2015 Meeting)

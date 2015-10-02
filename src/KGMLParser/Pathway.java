@@ -143,8 +143,10 @@ public class Pathway {
 		 System.out.println(name + " Stats:");
 		 System.out.println("Compounds: " + compoundNum);
 		 System.out.println("Genes: " + geneNum);
+		 System.out.println("Total Nodes: " + (compoundNum+ geneNum));
 		 System.out.println("Relations: " + relationNum);
 		 System.out.println("Reactions: " + reactionNum);
+		 System.out.println("Total Edges: " + (relationNum + reactionNum));
 	 }
 
 }

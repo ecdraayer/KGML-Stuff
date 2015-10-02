@@ -108,8 +108,10 @@ public class PathwayMap {
 		 }		 
 		 System.out.println("Total Compounds: " + totalCompounds);
 		 System.out.println("Total Genes: " + totalGenes);
+		 System.out.println("Total Nodes: " + (totalCompounds+ totalGenes));
 		 System.out.println("Total Reactions: " + totalReactions);
-		 System.out.println("TotalRelations: " + totalRelations);
+		 System.out.println("Total Relations: " + totalRelations);
+		 System.out.println("Total Edges: " + (totalReactions + totalRelations));
 	 }
 
 }

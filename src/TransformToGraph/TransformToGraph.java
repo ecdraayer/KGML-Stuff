@@ -1,6 +1,7 @@
 package TransformToGraph;
 
 
+
 import com.mxgraph.swing.*;
 
 import KGMLParser.Kegg_Entry;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -83,7 +85,17 @@ public class TransformToGraph extends JApplet {
 		
 		if (xmlFolder.isEmpty()==false)
 		{
+			//measure xml loading time.
+			long startTime = System.nanoTime();				
 			Organism = new PathwayMap(System.getProperty("user.dir") + xmlFolder);
+			long stopTime = System.nanoTime();
+			
+			double readElapsed = (stopTime - startTime);
+			//readElapsed= TimeUnit.MILLISECONDS.convert(readElapsed, TimeUnit.NANOSECONDS);
+			readElapsed= (readElapsed/1000000.0);
+			System.out.println("Reading File time(miliseconds) "+ readElapsed);
+			
+			
 			g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 			// TODO Auto-generated method stub
 			TransformToGraph applet = new TransformToGraph();
@@ -101,7 +113,7 @@ public class TransformToGraph extends JApplet {
 	        String[] Gene1 = null,Gene2 = null, temp;
 	        QueryGenerator Query = new QueryGenerator(Organism);
 	        
-	        String[][] ToPrint= new String[k*2][5];
+	        String[][] ToPrint= new String[k*2][6];
 	        		
 	        
 	        for (int i=0; i < k*2; i++)
@@ -122,9 +134,19 @@ public class TransformToGraph extends JApplet {
 		        //Gene2[1]="ko:K03081";	
 		   
 
-			    System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0]);
-			        
+			   
+			    startTime = System.nanoTime();	
 				List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
+				stopTime = System.nanoTime();		
+				
+				double FindPathElapsed = (stopTime - startTime);
+				//readElapsed= TimeUnit.MILLISECONDS.convert(readElapsed, TimeUnit.NANOSECONDS);
+				FindPathElapsed=  (FindPathElapsed/1000000.0);
+				System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0] + " in " + FindPathElapsed +" (miliseconds)");
+			    
+				
+				
+				
 				ToPrint[i][0]=Gene1[1];
 				ToPrint[i][1]=Gene2[1];
 				    if (path != null )
@@ -146,6 +168,7 @@ public class TransformToGraph extends JApplet {
 						    ToPrint[i][2]= Integer.toString(path.size());
 						    ToPrint[i][3]= Integer.toString(NoPathways);
 						    ToPrint[i][4]= path.toString();
+						    ToPrint[i][5]=Double.toString(FindPathElapsed);
 						    
 					    }
 					    else
@@ -159,7 +182,7 @@ public class TransformToGraph extends JApplet {
 		    
 	        }
 	        //print results
-	        Query.OutputResults(ToPrint);
+	        Query.OutputResults(ToPrint, readElapsed);
 	        System.out.println("Done!");
 		}
 	    

@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -70,6 +71,8 @@ public class KOSearch {
 			     ArrayList<String> KOnums = new ArrayList<String>();
 			     ArrayList<ArrayList<String>> Pathways = new ArrayList<ArrayList<String>>();
 			     WebDriver driver = new HtmlUnitDriver();
+			     driver.manage().timeouts().pageLoadTimeout(80, TimeUnit.SECONDS);
+			     
 			     
 			     KOnums=CSV.ReadColDistinctValues(2);
 			     //print distinct values for debugging

@@ -48,10 +48,10 @@ public class QueryGenerator {
 		
 		return Genedata;
 	}
-	public void OutputResults(String[][] ToPrint)
+	public void OutputResults(String[][] ToPrint, double readElapsed)
 	{
 		 
-		ExportCsv Csv = new ExportCsv("outputConnected.csv", false,"q1,q2,edgeNum,pathwayNumber,ShortestPath");
+		ExportCsv Csv = new ExportCsv("outputConnected.csv", false,"q1,q2,edgeNum,pathwayNumber,ShortestPath,RunningTime");
 		
 		ExportCsv CsvNotCon = new ExportCsv("outputNotConnected.csv", false,"q1,q2,edgeNum,pathwayNumber,ShortestPath");
 		
@@ -86,6 +86,7 @@ public class QueryGenerator {
 					Csv.WriteFieldCSV(s[2] ,0);
 					Csv.WriteFieldCSV(s[3] ,0);
 					Csv.WriteFieldCSV("\"" + s[4] + "\""  ,0);
+					Csv.WriteFieldCSV(s[5]  ,0);
 					Csv.WriteFieldCSV("" ,1);
 					Csv.FlushCSV();
 				}
@@ -96,8 +97,19 @@ public class QueryGenerator {
 			}
 		
 		}
-		  Csv.closeCSV();
-		  CsvNotCon.closeCSV();
+		//write reading xml time
+		try {
+			Csv.WriteFieldCSV("Reading xml time(miliseconds): " ,0);
+			Csv.WriteFieldCSV(Double.toString(readElapsed) ,0);
+			Csv.WriteFieldCSV("" ,1);
+			Csv.FlushCSV();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Csv.closeCSV();
+		CsvNotCon.closeCSV();
 		
 		
 	}

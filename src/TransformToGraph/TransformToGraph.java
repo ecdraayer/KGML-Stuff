@@ -98,16 +98,18 @@ public class TransformToGraph extends JApplet {
 			
 			g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 			// TODO Auto-generated method stub
+		
 			TransformToGraph applet = new TransformToGraph();
-			applet.init();
 			
-	
-			JFrame frame = new JFrame();
-	        frame.getContentPane().add(applet);		
-	        frame.setTitle("Pathway graph");
-	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        frame.pack();
-	        frame.setVisible(true);
+		
+				applet.init();	
+				JFrame frame = new JFrame();
+		        frame.getContentPane().add(applet);		
+		        frame.setTitle("Pathway graph");
+		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		        frame.pack();
+		        frame.setVisible(true);
+			
 	
 	   
 	        String[] Gene1 = null,Gene2 = null, temp;
@@ -290,6 +292,7 @@ public class TransformToGraph extends JApplet {
 	    }
 	  private void adjustDisplaySettings(JGraph jg)
 	    {
+		  final Dimension DEFAULT_SIZE = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 	        jg.setPreferredSize(DEFAULT_SIZE);
 
 	        Color c = DEFAULT_BG_COLOR;

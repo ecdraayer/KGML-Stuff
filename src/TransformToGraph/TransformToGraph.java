@@ -99,10 +99,11 @@ public class TransformToGraph extends JApplet {
 			g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 			// TODO Auto-generated method stub
 		
-			TransformToGraph applet = new TransformToGraph();
+			
 			
 			if (nv==true)
 		    {
+				TransformToGraph applet = new TransformToGraph();
 				applet.init();	
 				JFrame frame = new JFrame();
 		        frame.getContentPane().add(applet);		

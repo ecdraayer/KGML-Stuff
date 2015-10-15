@@ -40,7 +40,7 @@ public class TransformToGraph extends JApplet {
 	 *   @author Raul Alvarado
 	 */
 	private static final long serialVersionUID = 7980400801849305625L;
-	private static final Dimension DEFAULT_SIZE = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+	
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
     private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
 
@@ -190,6 +190,7 @@ public class TransformToGraph extends JApplet {
 
 	public void init()
     {
+		final Dimension DEFAULT_SIZE = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		 // create a JGraphT graph
 	
 		 // create a visualization using JGraph, via an adapter

@@ -87,7 +87,7 @@ public class TransformToGraph extends JApplet {
 		{
 			//measure xml loading time.
 			long startTime = System.nanoTime();				
-			Organism = new PathwayMap(System.getProperty("user.dir") + xmlFolder);
+			Organism = new PathwayMap( xmlFolder);
 			long stopTime = System.nanoTime();
 			
 			double readElapsed = (stopTime - startTime);

@@ -101,7 +101,8 @@ public class TransformToGraph extends JApplet {
 		
 			TransformToGraph applet = new TransformToGraph();
 			
-		
+			if (nv==true)
+		    {
 				applet.init();	
 				JFrame frame = new JFrame();
 		        frame.getContentPane().add(applet);		
@@ -109,8 +110,9 @@ public class TransformToGraph extends JApplet {
 		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		        frame.pack();
 		        frame.setVisible(true);
+		    }
 			
-	
+		    AddVerticesAndEdges(nv);
 	   
 	        String[] Gene1 = null,Gene2 = null, temp;
 	        QueryGenerator Query = new QueryGenerator(Organism);
@@ -204,12 +206,12 @@ public class TransformToGraph extends JApplet {
         resize(DEFAULT_SIZE);
         
         
-        AddVerticesAndEdges();
+       
     }
 	
 	
 	
-	private void AddVerticesAndEdges()
+	private static void AddVerticesAndEdges(boolean nv)
 	{
 		     
     	ArrayList<Pathway> pathways = Organism.pathways;
@@ -227,14 +229,18 @@ public class TransformToGraph extends JApplet {
 	    		
 	    		
 	    			g.addVertex(ko);
-		    		if (ko.contains("cpd"))
-		    		{
-		    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()),  col, Color.WHITE);
-		    		}
-		    		else
-		    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()), col.brighter(), Color.WHITE);
-		    		
-		    			
+	    			if (nv==true)
+	    			{
+	    		  		if (ko.contains("cpd"))
+			    		{
+			    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()),  col, Color.WHITE);
+			    		}
+			    		else
+			    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()), col.brighter(), Color.WHITE);
+			    		
+			    			
+	    			}
+		  
 
 	    			//System.out.println(k.getID() + " " + k.getName() + " " + k.GetGraph().getX());
 	    			}
@@ -262,7 +268,7 @@ public class TransformToGraph extends JApplet {
 	
 	 @SuppressWarnings("unchecked")
 
-	private void positionVertexAt(Object vertex, int x, int y, Color color, Color FColor )
+	private static void positionVertexAt(Object vertex, int x, int y, Color color, Color FColor )
 	    {
 		
 		 	
@@ -309,7 +315,7 @@ public class TransformToGraph extends JApplet {
 
 	        jg.setBackground(c);
 	    }
-	  private Color GenerateColor()
+	  private static Color GenerateColor()
 	  {
 		  Random rand = new Random();
 		  float r = rand.nextFloat();

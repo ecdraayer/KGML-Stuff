@@ -46,9 +46,13 @@ public class QueryGenerator {
 		int geneidx = rand.nextInt(pathway.getEntryL().size());
 		Genedata[1]=pathway.getEntryL().get(geneidx).getName();
 		
+		if (Genedata[1].equals("undefined")==true)
+			Genedata[1]=Genedata[1]+Genedata[0];
+				
+		
 		return Genedata;
 	}
-	public void OutputResults(String[][] ToPrint, double readElapsed)
+	public void OutputResults(String[][] ToPrint, double readElapsed, double memory)
 	{
 		 
 		ExportCsv Csv = new ExportCsv("outputConnected.csv", false,"q1,q2,edgeNum,pathwayNumber,ShortestPath,RunningTime");
@@ -101,6 +105,9 @@ public class QueryGenerator {
 		try {
 			Csv.WriteFieldCSV("Reading xml time(miliseconds): " ,0);
 			Csv.WriteFieldCSV(Double.toString(readElapsed) ,0);
+			Csv.WriteFieldCSV("" ,1);
+			Csv.WriteFieldCSV("JVM memory: " ,0);
+			Csv.WriteFieldCSV(Double.toString(memory) ,0);
 			Csv.WriteFieldCSV("" ,1);
 			Csv.FlushCSV();
 		} catch (IOException e) {

@@ -71,7 +71,7 @@ public class KOSearch {
 			     ArrayList<String> KOnums = new ArrayList<String>();
 			     ArrayList<ArrayList<String>> Pathways = new ArrayList<ArrayList<String>>();
 			     WebDriver driver = new HtmlUnitDriver();
-			     driver.manage().timeouts().pageLoadTimeout(80, TimeUnit.SECONDS);
+			     driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
 			     
 			     
 			     KOnums=CSV.ReadColDistinctValues(2);

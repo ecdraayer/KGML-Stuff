@@ -93,6 +93,9 @@ public class TransformToGraph extends JApplet {
 			double readElapsed = (stopTime - startTime);
 			//readElapsed= TimeUnit.MILLISECONDS.convert(readElapsed, TimeUnit.NANOSECONDS);
 			readElapsed= (readElapsed/1000000.0);
+			double memory = usedMemory()/ (1024.0 * 1024.0);
+			System.out.println("JVM memory :" +memory +"MB");
+			
 			System.out.println("Reading File time(miliseconds) "+ readElapsed);
 			
 			
@@ -119,8 +122,6 @@ public class TransformToGraph extends JApplet {
 	        QueryGenerator Query = new QueryGenerator(Organism);
 	        
 	        String[][] ToPrint= new String[k*2][6];
-	        		
-	        
 	        for (int i=0; i < k*2; i++)
 	        {
 	            //search for path from both directions
@@ -128,6 +129,8 @@ public class TransformToGraph extends JApplet {
 	        	{
 			        Gene1= Query.GetRandomGene();
 			        Gene2= Query.GetRandomGene();
+			        
+			   
 	        	}
 	        	else
 	        	{
@@ -135,13 +138,14 @@ public class TransformToGraph extends JApplet {
 	        		Gene1=Gene2;
 	        		Gene2=	temp;
 	        	}
-		        //Gene1[1]="ko:K00875";
-		        //Gene2[1]="ko:K03081";	
-		   
-
+		       // Gene1[1]="ko:K05634";
+		       // Gene2[1]="ko:K14248";	
+		  
 			   
 			    startTime = System.nanoTime();	
+			   
 				List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
+			
 				stopTime = System.nanoTime();		
 				
 				double FindPathElapsed = (stopTime - startTime);
@@ -187,7 +191,7 @@ public class TransformToGraph extends JApplet {
 		    
 	        }
 	        //print results
-	        Query.OutputResults(ToPrint, readElapsed);
+	        Query.OutputResults(ToPrint, readElapsed, memory);
 	        System.out.println("Done!");
 		}
 	    
@@ -218,7 +222,7 @@ public class TransformToGraph extends JApplet {
     	ArrayList<Pathway> pathways = Organism.pathways;
     	Color col= null;
     	for(Pathway cpway : pathways){
-    	
+    		
     		col=GenerateColor();
     		if (cpway.getName() != null)
 			{
@@ -227,8 +231,10 @@ public class TransformToGraph extends JApplet {
 	    			for(Kegg_Entry k : cpway.getEntryL()){   	
 	    		
 	    			String ko= k.getName();
-	    		
-	    		
+	    			
+	    			if (ko.equals("undefined")==true)
+	    				ko=ko + cpway.getName();
+
 	    			g.addVertex(ko);
 	    			if (nv==true)
 	    			{
@@ -250,7 +256,18 @@ public class TransformToGraph extends JApplet {
 			}
     		for(Relation r : cpway.getRelationL()){ 
     		
-    			g.addEdge( cpway.GetNameFromId(r.getEntry1()), cpway.GetNameFromId(r.getEntry2()));
+    			String edge1, edge2;
+    			edge1=cpway.GetNameFromId(r.getEntry1());
+    			edge2=cpway.GetNameFromId(r.getEntry2());
+
+    			
+    			//append pathname to undefined genes
+    			if (edge1.equals("undefined")==true)
+    				edge1=edge1 + cpway.getName();
+    			if (edge2.equals("undefined")==true)
+    				edge2=edge2 + cpway.getName();
+    				
+    			g.addEdge(edge1 ,edge2 );
     			//System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
     		}
     		for(Reaction r : cpway.getReactionL()){
@@ -332,5 +349,11 @@ public class TransformToGraph extends JApplet {
 			float b = rand.nextFloat() / 2f + 0.5;
 		   */
 		  return randomColor;
+	  }
+	  private static long usedMemory()
+	  {
+	        Runtime rt = Runtime.getRuntime();
+
+	        return rt.totalMemory() - rt.freeMemory();
 	  }
 }

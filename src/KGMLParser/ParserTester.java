@@ -17,6 +17,8 @@ public class ParserTester {
 	public static void main(String[] args) throws IOException {
     	PathwayMap Organism = new PathwayMap(null);
     	Organism.getTotalStats();
+    	CreateCSV.generateCSVNode(Organism);
+    	CreateCSV.generateEdges(Organism);
     	//ListGenes.Listgenes(Organism.pathways);
     	//Organism.isConnected();
     }

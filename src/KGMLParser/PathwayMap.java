@@ -4,35 +4,45 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 
-import org.apache.commons.io.filefilter.FileFileFilter;
+//import org.apache.commons.io.filefilter.FileFileFilter;
 
-import com.mxgraph.model.mxGraphModel.Filter;
+//import com.mxgraph.model.mxGraphModel.Filter;
 
 
 public class PathwayMap {
-	public ArrayList<Pathway> pathways; /*Stores all the pathways that our organism has*/
-	ArrayList<ArrayList<Pathway>> connections; /*Stores the information on which pathways are connected to eachother */
-	ArrayList<Pathway> sublist; /*Sublist for the connections instance variable */
+	public ArrayList<Pathway> pathways; // Stores all the pathways that our organism has
+	ArrayList<ArrayList<Pathway>> connections; // Stores the information on which pathways are connected to eachother 
+	ArrayList<Pathway> sublist; // Sublist for the connections instance variable 
 
 	public PathwayMap(String path){
-		final File folder = new File(path); /*Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC*/
+		/*final File folder = new File("/home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC");
+		pathways = new ArrayList<Pathway>(); 
+        connections = new ArrayList<ArrayList<Pathway>>();
+		sublist = new ArrayList<Pathway>();
+        
+    	for(final File fileEntry : folder.listFiles()){ // For loop to go through all KGML files in folder(configured so that KGML files must be in same folder as java program 
+    		Pathway pathway = new Pathway();
+    		new MySaxParser(fileEntry.toString(), pathway); // Call parser 
+            pathways.add(pathway);   		
+    	} */
+		final File folder = new File(path); // Destination of output file /home/edraa/Documents/Research/MapData/Bacteria_879462.4.PATRIC
 		
 		//return only xml files
 		FileFilter xmlFilter = new FileFilter() {
 			public boolean accept(File file) {
 				return file.getName().toLowerCase().endsWith(".xml");
 			}
-		};
+		}; 
 		pathways = new ArrayList<Pathway>(); 
         connections = new ArrayList<ArrayList<Pathway>>();
 		sublist = new ArrayList<Pathway>();
         
-    	for(final File fileEntry : folder.listFiles(xmlFilter)){ /*For loop to go through all KGML files in folder(configured so that KGML files must be in same folder as java program */
+    	for(final File fileEntry : folder.listFiles(xmlFilter)){  // for loop to go through all KGML files in folder(configured so that KGML files must be in same folder as java program 
     	
     		Pathway pathway = new Pathway();
-    		new MySaxParser(fileEntry.toString(), pathway); /* Call parser */
+    		new MySaxParser(fileEntry.toString(), pathway); //Call parser 
             pathways.add(pathway);   		
-    	}
+    	}  
 	}
 	
 	public String toString(){

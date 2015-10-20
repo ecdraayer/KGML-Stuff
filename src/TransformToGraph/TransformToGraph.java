@@ -47,6 +47,7 @@ public class TransformToGraph extends JApplet {
     static PathwayMap Organism;    
 	static ListenableGraph<String, DefaultEdge> g ;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		
 		String xmlFolder="";
@@ -139,14 +140,16 @@ public class TransformToGraph extends JApplet {
 	        		Gene2=	temp;
 	        	}
 		       // Gene1[1]="ko:K05634";
-		       // Gene2[1]="ko:K14248";	
-		  
-			   
+		       // Gene2[1]="ko:K14248";
+	        	
+	        	//remove initialization from time metric 
+	        	
+	        
 			    startTime = System.nanoTime();	
-			   
-				List<DefaultEdge> path = DijkstraShortestPath.findPathBetween(g, Gene1[1], Gene2[1]);
-			
+	        	DijkstraShortestPath d = new DijkstraShortestPath(g, Gene1[1], Gene2[1]); 	        	
 				stopTime = System.nanoTime();		
+				List<DefaultEdge> path =d.getPathEdgeList();
+				
 				
 				double FindPathElapsed = (stopTime - startTime);
 				//readElapsed= TimeUnit.MILLISECONDS.convert(readElapsed, TimeUnit.NANOSECONDS);

@@ -17,12 +17,9 @@
 #java -cp kgml.jar KOSearch.KOSearch -i ../pathway/Bacteria_1385755.6.PATRIC/csv/Seq_KO.csv -o ../pathway/Bacteria_1385755.6.PATRIC/
 
 #Human
-java -cp kgml.jar KOSearch.KOSearch -i ../pathway/Human/csv/Seq_KO.csv -o ../pathway/Human/ -r
-
-
-
-
+#java -cp kgml.jar KOSearch.KOSearch -i ../pathway/Human/csv/Seq_KO.csv -o ../pathway/Human/ -r
 
 
 # Run Raul's TransformToGraph
 java -cp kgml.jar TransformToGraph.TransformToGraph -f ../pathway/Bacteria_879462.4.PATRIC -k 50 -nv
+java -cp kgml.jar TransformToGraph.TransformToGraph -f ../pathway/Human -k 50 -nv

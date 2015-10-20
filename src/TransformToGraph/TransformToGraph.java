@@ -143,8 +143,6 @@ public class TransformToGraph extends JApplet {
 		       // Gene2[1]="ko:K14248";
 	        	
 	        	//remove initialization from time metric 
-	        	
-	        
 			    startTime = System.nanoTime();	
 	        	DijkstraShortestPath d = new DijkstraShortestPath(g, Gene1[1], Gene2[1]); 	        	
 				stopTime = System.nanoTime();		

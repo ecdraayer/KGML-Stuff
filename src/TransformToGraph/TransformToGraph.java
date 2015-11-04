@@ -2,25 +2,23 @@ package TransformToGraph;
 
 
 
-import com.mxgraph.swing.*;
-
 import KGMLParser.Kegg_Entry;
 import KGMLParser.Pathway;
 import KGMLParser.PathwayMap;
 import KGMLParser.Reaction;
 import KGMLParser.Relation;
+import KOExtraction.ExportCsv;
+import KOSearch.ReadCSV;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
@@ -45,18 +43,18 @@ public class TransformToGraph extends JApplet {
     private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
 
     static PathwayMap Organism;    
-	static ListenableGraph<String, DefaultEdge> g ;
+	static ListenableGraph<String, DefaultEdge> g =new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		
-		String xmlFolder="";
+		String xmlFolder="", csvFolder="";		
 		Integer k=10;
 		int j=0;
 		boolean nv=true;
 		
 
-		if (args.length >= 0)
+		if (args.length > 0)
 		{
 			while (j < args.length)
 			{
@@ -64,6 +62,10 @@ public class TransformToGraph extends JApplet {
 				if (args[j].equals("-f"))
 				{
 					xmlFolder=args[j+1];
+				}
+				if (args[j].equals("-c"))
+				{
+					csvFolder=args[j+1];
 				}
 				if (args[j].equals("-k"))
 				{
@@ -80,31 +82,15 @@ public class TransformToGraph extends JApplet {
 		else			
 		{
 			System.out.println("Please provide appropriate arguments");
-			System.out.println("-f folder containing KGML files -k Number of random queries(default 10) -nv no visual representation");
+			System.out.println("-f folder containing KGML files -c Folder containing graph csv Files -k Number of random queries(default 10) -nv no visual representation");
 			System.exit(1);
 		}
 		
-		if (xmlFolder.isEmpty()==false)
+		if (xmlFolder.isEmpty()==false || csvFolder.isEmpty()==false)
 		{
-			//measure xml loading time.
-			long startTime = System.nanoTime();				
-			Organism = new PathwayMap( xmlFolder);
-			long stopTime = System.nanoTime();
+
 			
-			double readElapsed = (stopTime - startTime);
-			//readElapsed= TimeUnit.MILLISECONDS.convert(readElapsed, TimeUnit.NANOSECONDS);
-			readElapsed= (readElapsed/1000000.0);
-			double memory = usedMemory()/ (1024.0 * 1024.0);
-			System.out.println("JVM memory :" +memory +"MB");
-			
-			System.out.println("Reading File time(miliseconds) "+ readElapsed);
-			
-			
-			g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 			// TODO Auto-generated method stub
-		
-			
-			
 			if (nv==true)
 		    {
 				TransformToGraph applet = new TransformToGraph();
@@ -116,88 +102,80 @@ public class TransformToGraph extends JApplet {
 		        frame.pack();
 		        frame.setVisible(true);
 		    }
+			if (xmlFolder.isEmpty()==false)
+			{
+				Organism = new PathwayMap( xmlFolder);	
+				AddVerticesAndEdgesFromXML(nv);
+			}
+			else
+			{
+				ReadCSV NodesCSV= new ReadCSV(csvFolder+ "/Nodes.csv");
+				ArrayList<String> GeneNames= NodesCSV.ReadCol(0);
+				
+				ArrayList<ArrayList<String>> Edges = new ArrayList<ArrayList<String>>();
+				ReadCSV Source= new ReadCSV(csvFolder+ "/Edges.csv");
+				Edges.add(Source.ReadCol(0));
+				ReadCSV Destination= new ReadCSV(csvFolder+ "/Edges.csv");
+				Edges.add(Destination.ReadCol(1));
+				
+		
+				AddVerticesAndEdgesFromCSV(GeneNames, Edges);
+			}
 			
-		    AddVerticesAndEdges(nv);
-	   
-	        String[] Gene1 = null,Gene2 = null, temp;
-	        QueryGenerator Query = new QueryGenerator(Organism);
+			//generate genes to query;
+			String[][] ToPrint= new String[k][6];
+			for (int i=0; i < k; i++)
+		    {
+				ToPrint[i][0]=GetRandomGene();
+				ToPrint[i][1]= GetRandomGene();
 	        
-	        String[][] ToPrint= new String[k*2][6];
-	        for (int i=0; i < k*2; i++)
-	        {
-	            //search for path from both directions
-	        	if (i%2==0)
-	        	{
-			        Gene1= Query.GetRandomGene();
-			        Gene2= Query.GetRandomGene();
-			        
-			   
-	        	}
-	        	else
-	        	{
-	        		temp =Gene1;
-	        		Gene1=Gene2;
-	        		Gene2=	temp;
-	        	}
-		       // Gene1[1]="ko:K05634";
-		       // Gene2[1]="ko:K14248";
-	        	
-	        	//remove initialization from time metric 
-			    startTime = System.nanoTime();	
-	        	DijkstraShortestPath d = new DijkstraShortestPath(g, Gene1[1], Gene2[1]); 	        	
-				stopTime = System.nanoTime();		
-				List<DefaultEdge> path =d.getPathEdgeList();
-				
-				
-				double FindPathElapsed = (stopTime - startTime);
-				//readElapsed= TimeUnit.MILLISECONDS.convert(readElapsed, TimeUnit.NANOSECONDS);
-				FindPathElapsed=  (FindPathElapsed/1000000.0);
-				System.out.println("Shortest path from " + Gene1[1] + " from pathway "+ Gene1[0] + " to " + Gene2[1] + " from pathway " + Gene2[0] + " in " + FindPathElapsed +" (miliseconds)");
-			    
-				
-				
-				
-				ToPrint[i][0]=Gene1[1];
-				ToPrint[i][1]=Gene2[1];
-				    if (path != null )
-				    {
-					    if (path.size()>0 )
-					    {
-						    System.out.println(path);
-						    if (nv==true)
-						    {
-							    ShortestPathtoGraph SG= new ShortestPathtoGraph();
-							    SG.CreateGraph(path, Organism.pathways);
-						    }
-						    
-						    
-						    
-						    int NoPathways=Query.DistinctPathways(path).size();
-						    
-						
-						    ToPrint[i][2]= Integer.toString(path.size());
-						    ToPrint[i][3]= Integer.toString(NoPathways);
-						    ToPrint[i][4]= path.toString();
-						    ToPrint[i][5]=Double.toString(FindPathElapsed);
-						    
-					    }
-					    else
-					    	System.out.println("No path found");
-				    }
-				    else
-				    	System.out.println("No path found");
-				    
-	
-		      
-		    
-	        }
-	        //print results
-	        Query.OutputResults(ToPrint, readElapsed, memory);
-	        System.out.println("Done!");
+		    }
+			OutputResults(ToPrint);
+		    System.out.println("Done!");
+	   
 		}
-	    
+	
 	}
+	public static  String GetRandomGene()
+	{		
+		String Genedata = new String();
+		//random path
+		Random rand = new Random();
+		
+		ArrayList<String> VertexList = new ArrayList<String>(g.vertexSet());
+		
+		int r = rand.nextInt(VertexList.size());
 
+		Genedata=VertexList.get(r);
+		
+		//random gene in pathway	
+				
+		
+		return Genedata;
+	}
+	public static void OutputResults(String[][] ToPrint)
+	{
+		 
+		ExportCsv Csv = new ExportCsv("GenesToQuery.csv", false,"q1,q2");
+		
+
+		System.out.println("q1 \t\t\t q2 "  );
+		
+
+		for (String[] s: ToPrint)
+		{
+			System.out.println(s[0] + "\t\t" + s[1] );
+					try {
+						Csv.WriteFieldCSV(s[0] ,0);
+						Csv.WriteFieldCSV(s[1] ,0);
+						Csv.WriteFieldCSV("" ,1);
+						Csv.FlushCSV();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		}
+	}
 	public void init()
     {
 		final Dimension DEFAULT_SIZE = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -215,11 +193,34 @@ public class TransformToGraph extends JApplet {
        
     }
 	
-	
-	
-	private static void AddVerticesAndEdges(boolean nv)
+
+	public static  void AddVerticesAndEdgesFromCSV(ArrayList<String> geneNames, ArrayList<ArrayList<String>> edges)
 	{
-		     
+		
+		String GeneName="";
+		for (int i=0; i < geneNames.size(); i++)
+		{
+			GeneName=geneNames.get(i);
+			
+			g.addVertex(GeneName);
+			
+			if (GeneName.equals("cpd:C16471"))
+				System.out.println("found " + GeneName.length());
+			
+		}
+		for (int i=0; i < edges.get(0).size(); i++)
+		{
+			System.out.println("Source: " +edges.get(0).get(i) + " Destination: " +edges.get(1).get(i) );
+			//do not add relations to genes not included in KGML file
+			if (g.containsVertex(edges.get(0).get(i)) && g.containsVertex(edges.get(0).get(i)))
+				g.addEdge(edges.get(0).get(i).trim() ,edges.get(1).get(i).trim() );
+		}
+		
+		
+	}
+	public static void AddVerticesAndEdgesFromXML(boolean nv)
+	{
+		//g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     	ArrayList<Pathway> pathways = Organism.pathways;
     	Color col= null;
     	for(Pathway cpway : pathways){
@@ -257,7 +258,7 @@ public class TransformToGraph extends JApplet {
 			}
     		for(Relation r : cpway.getRelationL()){ 
     		
-    			String edge1, edge2;
+    			String edge1="", edge2="";
     			edge1=cpway.GetNameFromId(r.getEntry1());
     			edge2=cpway.GetNameFromId(r.getEntry2());
 
@@ -267,13 +268,29 @@ public class TransformToGraph extends JApplet {
     				edge1=edge1 + cpway.getName();
     			if (edge2.equals("undefined")==true)
     				edge2=edge2 + cpway.getName();
-    				
-    			g.addEdge(edge1 ,edge2 );
+
+    			
+    			System.out.println(r.getEntry1() + " " + edge1 + " " + r.getEntry2()+ " " + edge2);
+    			try {
+    				g.addEdge(edge1 ,edge2 );
+    			}
+    			catch(NullPointerException e)
+    			{
+    				System.out.println(g.vertexSet());
+    			}
     			//System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
     		}
     		for(Reaction r : cpway.getReactionL()){
     			if (g.containsVertex(r.getSubstrate().get(0).getName()) && g.containsVertex(r.getProduct().get(0).getName()) )
+    			{
+    				try {
     				g.addEdge( r.getSubstrate().get(0).getName(),  r.getProduct().get(0).getName());
+    				}
+    				catch(NullPointerException e)
+        			{
+        				System.out.println(g.vertexSet());
+        			}
+    			}
     			//System.out.println("Reaction " + r.getId() +" Subtrate " + r.getSubstrate().get(0).getName() + " Product "  + r.getProduct().get(0).getName()  );
     		} 		 
     		
@@ -351,10 +368,5 @@ public class TransformToGraph extends JApplet {
 		   */
 		  return randomColor;
 	  }
-	  private static long usedMemory()
-	  {
-	        Runtime rt = Runtime.getRuntime();
-
-	        return rt.totalMemory() - rt.freeMemory();
-	  }
+	 
 }

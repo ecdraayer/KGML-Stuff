@@ -34,10 +34,12 @@ public class ReadCSV {
 			e.printStackTrace();
 		}
 	}
-	public ArrayList<String> ReadCol(int colidx)
+	public ArrayList<String> ReadCol(int colidx) 
 	{
 		String line="";
+	
 		ArrayList<String> column = new ArrayList<String>();
+		
 		int i =0;
 		try {
 			while ((line = br.readLine()) != null) {
@@ -55,6 +57,8 @@ public class ReadCSV {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		return column;
 	}
 	public ArrayList<String> ReadColDistinctValues(int colidx)

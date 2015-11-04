@@ -27,10 +27,14 @@ src: source code
 		It is utilizing port 25 to communicate with smtp.nmsu.edu , it might not work on a home network since ISP block port 25. As an alternative we can use port 587 but it requires authentication.
 	 *	TrasnformToGraph written by Raul
 		TrasnformToGraph.java
-		The main function converts a set of KGMLs to a directedGraph.  It reads KGML data through the KGMSLPArser class.
-		It includes an applet which represent the overall graph and also includes the shortest calculation and graphical representation.
-		Querygenerator gets two random genes and determines shortest path, it outputs the following data:
+		If -f is specified it converts a set of KGMLs to a directedGraph.  It reads KGML data through the KGMSLPArser class.
+		If -c is specified it reads Edges and Nodes to create a directedGraph.
+		Both options output a GenesToQuery.csv which includes k selected random genes pairs.
+		It includes an applet which represent the overall graph, only when graph is created via KGML files.
 		
+	 *  QueryGenerator
+		Includes the shortest calculation and graphical representation.
+		Querygenerator gets two random genes and determines shortest path, it outputs the following data:
 		Shortest path from ko:K01184 from pathway Raul1 to ko:K05352 from pathway Raul3
 		[(ko:K01184 : cpd:C03033), (cpd:C03033 : ko:K01195 ko:K14756), (ko:K01195 ko:K14756 : ko:K01786 ko:K03080), (ko:K01786 ko:K03080 : ko:K05352)]
 		q1 		 	q2 		  	edgeNum 	pathwayNumber 

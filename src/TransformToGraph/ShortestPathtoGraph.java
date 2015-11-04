@@ -1,32 +1,17 @@
 package TransformToGraph;
 
-import com.mxgraph.layout.*;
-import com.mxgraph.swing.*;
-
 import KGMLParser.Kegg_Entry;
 import KGMLParser.Pathway;
-import KGMLParser.PathwayMap;
-import KGMLParser.Reaction;
-import KGMLParser.Relation;
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.*;
-import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
@@ -124,7 +109,32 @@ public class ShortestPathtoGraph extends JApplet {
 		}
 	 
     }
+	public void CreateGraphCSV(List<DefaultEdge>  path)
+    {
+		int posx=10, posx2=10;
+		int posy=10, posy2=10;
+		for (int i=0; i<path.size();i++)
+		{
+		    String[] vertex = path.get(i).toString().split(" : ");
+		    vertex[0]= vertex[0].replace("(", "");
+		    vertex[1]= vertex[1].replace(")", "");	
+		    g.addVertex(vertex[0]);
+		    g.addVertex(vertex[1]);
+		    g.addEdge(vertex[0],vertex[1]);		
+		    
+		    
+		    
+		    positionVertexAt(vertex[0],posx,posy );
+		    posx+=160;
+		   	posy+=100;
+		    positionVertexAt(vertex[1],posx2, posy2 );
+		    
+		    
+		    
 
+		}
+	 
+    }
 	@SuppressWarnings("unchecked")
 	private void positionVertexAt(Object vertex, int x, int y )
     {

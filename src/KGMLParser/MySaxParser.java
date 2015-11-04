@@ -55,7 +55,7 @@ public class MySaxParser extends DefaultHandler {
         } catch (SAXException e) {
             System.out.println("SAXException : xml not well formed");
         } catch (IOException e) {
-            System.out.println("IO error");
+            System.out.println("IO error" + e.getMessage());
         }
     }
     

@@ -1,0 +1,7 @@
+Total Compounds: 5029
+Total Genes: 8231
+Total Nodes: 14167
+Total Reactions: 6331
+Total Relations: 27483
+Total Edges: 33814
+

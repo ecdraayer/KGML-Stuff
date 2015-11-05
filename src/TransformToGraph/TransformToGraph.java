@@ -209,7 +209,7 @@ public class TransformToGraph extends JApplet {
 		{
 			System.out.println("Source: " +edges.get(0).get(i) + " Destination: " +edges.get(1).get(i) );
 			//do not add relations to genes not included in KGML file
-			if (g.containsVertex(edges.get(0).get(i)) && g.containsVertex(edges.get(0).get(i)))
+			if (g.containsVertex(edges.get(0).get(i)) && g.containsVertex(edges.get(1).get(i)))
 				g.addEdge(edges.get(0).get(i).trim() ,edges.get(1).get(i).trim() );
 		}
 		

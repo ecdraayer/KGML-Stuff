@@ -138,20 +138,30 @@ public class TransformToGraph extends JApplet {
 	}
 	public static  String GetRandomGene()
 	{		
-		String Genedata = new String();
+		String Genedata = "";
 		//random path
 		Random rand = new Random();
 		
 		ArrayList<String> VertexList = new ArrayList<String>(g.vertexSet());
-		
-		int r = rand.nextInt(VertexList.size());
 
-		Genedata=VertexList.get(r);
 		
-		//random gene in pathway	
+		while (Genedata=="")
+		{
+			int r = rand.nextInt(VertexList.size());
+			Genedata= VertexList.get(r);
+			if (g.edgesOf(Genedata).size() == 0)
+				Genedata="";
 				
+		}
 		
-		return Genedata;
+		
+	
+		
+		System.out.println("test" + g.edgesOf("path:ko00281"));
+		//random gene in pathway	
+
+		
+		return Genedata.toString();
 	}
 	public static void OutputResults(String[][] ToPrint)
 	{

@@ -204,9 +204,6 @@ public class TransformToGraph extends JApplet {
 			
 			g.addVertex(GeneName);
 			
-			if (GeneName.equals("cpd:C16471"))
-				System.out.println("found " + GeneName.length());
-			
 		}
 		for (int i=0; i < edges.get(0).size(); i++)
 		{

@@ -15,7 +15,7 @@ import KOExtraction.ExportCsv;
 import KOSearch.ReadCSV;
 
 public class QueryGenerator {
-
+	static ArrayList<ArrayList<String>> GeneNames = new ArrayList<ArrayList<String>>();
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void main(String[] args2) {
 		// TODO Auto-generated method stub
@@ -70,6 +70,7 @@ public class QueryGenerator {
 			GeneNames.add(Source.ReadCol(0));
 			ReadCSV Destination= new ReadCSV(GenesToQuery);
 			GeneNames.add(Destination.ReadCol(1));
+		
 			
 			ListenableGraph<String, DefaultEdge> g = TransformToGraph.g;
 
@@ -119,8 +120,8 @@ public class QueryGenerator {
 						    
 						    
 						    //determine number of pathways path travel thru
-						    //int NoPathways=DistinctPathways(path).size();
-						    int NoPathways=0;
+						    int NoPathways=DistinctPathways(path).size();
+
 						
 						    ToPrint[i][2]= Integer.toString(path.size());
 						    ToPrint[i][3]= Integer.toString(NoPathways);
@@ -147,7 +148,9 @@ public class QueryGenerator {
 	private static void createGraphCSV(String GraphDirectory)
 	{
 		ReadCSV NodesCSV= new ReadCSV(GraphDirectory+ "/Nodes.csv");
-		ArrayList<String> GeneNames= NodesCSV.ReadCol(0);
+		GeneNames.add(NodesCSV.ReadCol(0));
+		ReadCSV PathNames= new ReadCSV(GraphDirectory+ "/Nodes.csv");
+		GeneNames.add(PathNames.ReadCol(3));
 		
 		ArrayList<ArrayList<String>> Edges = new ArrayList<ArrayList<String>>();
 		ReadCSV Source= new ReadCSV(GraphDirectory+ "/Edges.csv");
@@ -158,7 +161,7 @@ public class QueryGenerator {
 		
 		//measure xml loading time.
 		
-		TransformToGraph.AddVerticesAndEdgesFromCSV(GeneNames, Edges);
+		TransformToGraph.AddVerticesAndEdgesFromCSV(GeneNames.get(0), Edges);
 	}
 	 private static long usedMemory()
 	 {
@@ -166,47 +169,28 @@ public class QueryGenerator {
 
 	        return rt.totalMemory() - rt.freeMemory();
 	 }
-	 public  Set<String> DistinctPathways(List<DefaultEdge>  path,ArrayList<Pathway> pathways)
-	{
-			 Set<String> hs = new HashSet<>();
-			 ArrayList<String> found = new ArrayList<String> ();
-			 for(Pathway cpway : pathways){
-				 
-				 for (int i=0; i<path.size();i++)
-				 {
-					 String[] vertex = path.get(i).toString().split(" : ");
-					 vertex[0]= vertex[0].replace("(", "");
-					 vertex[1]= vertex[1].replace(")", "");	
-					
-					 if (found.contains(vertex[0])==false)
-					 { 
-						 String pathname= cpway.GetPathwayNameFromGene(vertex[0]);
-						//only get name of last node of the path.  Avoid Duplicate searches.
-						 if (i ==path.size()-1)
-						 {
-							 String pathname2= cpway.GetPathwayNameFromGene(vertex[1]);
-							 if (pathname2!="")
-							 {
-								 hs.add( pathname2 );
-								 found.add(vertex[1]);
-							 }
-						 }
-							 
-						 
-						 if (pathname!="")
-						 {
-							 hs.add( pathname );
-							 found.add(vertex[0]);
-						 }
-					 }
-				 }
-				 
-			 }
-
-
-			return hs;
+	 public static  Set<String> DistinctPathways(List<DefaultEdge>  path)
+	 {
+		 Set<String> hs = new HashSet<>();
+		 
+		 
+		 for (int i=0; i<path.size();i++)
+		 {
 			
-		}
+			 String[] vertex = path.get(i).toString().split(" : ");
+			 vertex[0]= vertex[0].replace("(", "");
+			 vertex[1]= vertex[1].replace(")", "");	
+			 int pos = GeneNames.get(0).indexOf(vertex[0]);
+			 int pos2 = GeneNames.get(0).indexOf(vertex[1]);
+			 
+			 hs.add(GeneNames.get(1).get(pos));
+			 hs.add(GeneNames.get(1).get(pos2));
+			 
+		 }
+		 
+		return hs;
+	 
+	 }
 	 public static void OutputResults(String[][] ToPrint, double readElapsed, double memory)
 	 {
 			 

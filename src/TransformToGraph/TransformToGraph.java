@@ -211,7 +211,9 @@ public class TransformToGraph extends JApplet {
 		for (int i=0; i < geneNames.size(); i++)
 		{
 			GeneName=geneNames.get(i);
-			
+			//names with parenthesis cause issues on edgeList
+			GeneName.replace("(", "[");
+			GeneName.replace(")", "]");
 			g.addVertex(GeneName);
 			
 		}

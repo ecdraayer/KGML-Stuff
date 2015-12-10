@@ -67,8 +67,8 @@ public class MySaxParser extends DefaultHandler {
      *---------------------------------------------------------------------------------------------*/
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
-    	
-        if (elementName.equalsIgnoreCase("entry")) {
+
+    	if (elementName.equalsIgnoreCase("entry")) {
             entryTmp = new Kegg_Entry();
             entryTmp.setID(attributes.getValue("id"));
             entryTmp.setName(attributes.getValue("name"));
@@ -124,6 +124,7 @@ public class MySaxParser extends DefaultHandler {
      *-------------------------------------------------------------------------------------------------------*/
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
+
         // if end of entry element add to entry list
         if (element.equals("entry")) {
             pathwaytmp.entryL.add(entryTmp);

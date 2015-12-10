@@ -15,12 +15,12 @@ import java.util.Hashtable;
 
 public class CreateCSV {
 	   
-	   public static void generateCSVNode(PathwayMap Org)
+	   public static void generateCSVNode(PathwayMap Org, String OutputFile)
 	   {
 	      try
 	      {
-	    	 
-	          FileWriter writer = new FileWriter("Nodes.csv");
+	    	  OutputFile = OutputFile.concat("Nodes.csv");
+	          FileWriter writer = new FileWriter(OutputFile);
 	          
 	          //This Hashtable is used to avoid inserting repeats into the CSV file key = Entry Name, Value stored is the Entry Name
 	          Hashtable<String, String> Entries = new Hashtable<String, String>();
@@ -58,11 +58,12 @@ public class CreateCSV {
 	 	  }
 	   }
 	   
-	   public static void generateEdges(PathwayMap Org)
+	   public static void generateEdges(PathwayMap Org, String OutputFile)
 	   {
 		   try
 		      {
-		          FileWriter writer = new FileWriter("Edges.csv");
+			      OutputFile = OutputFile.concat("Edges.csv");
+		          FileWriter writer = new FileWriter(OutputFile);
 		          
 		          // Generate Header For CSV File
 		          writer.append("source, target, type, edgetype, Pathway Number\n");

@@ -11,27 +11,26 @@ import java.io.IOException;
 
 public class ParserTester {
 	
-
-	
 	/* Main function to call parse and write for testing */
-	public static void main(String[] args) throws IOException {
-		String Output="";
-		int j=0;
-		
-		/*try 
-		{
-		   
-		} catch(IOException e)
-		{
-			System.out.println("**Error**" + e.toString() + "\n");
-		}*/
-    	PathwayMap Organism = new PathwayMap("/home/edraa/workspace/KGML/Data");
-    	//Statistics.GetStats(Organism);
+	public static void main(String args[]) throws IOException {
+		System.out.println(args[0]);
+		String input = args[0];
+    	PathwayMap Organism = new PathwayMap(input);
+    	
+    	if(args[1] == "GenerateCSVFiles") {
+    	   String OutputCSV = args[3];
+           CreateCSV.generateCSVNode(Organism, OutputCSV);
+           CreateCSV.generateEdges(Organism, OutputCSV);
+    	}
+    	
+    	if(args[1].equals("GenerateStats")) {
+     	   Statistics.GetStats(Organism);
+    	}
+    	
+    	//Generates Inverted List
     	//ListGenes.Listgenes(Organism.pathways);
-    	//Organism.isConnected();
-    	CreateCSV.generateCSVNode(Organism);
-    	CreateCSV.generateEdges(Organism);
-    	//ListGenes.Listgenes(Organism.pathways);
+    	
+    	//Generates List to tell you which pathways are connected
     	//Organism.isConnected();
     }
 	

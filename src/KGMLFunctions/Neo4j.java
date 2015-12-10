@@ -54,10 +54,10 @@ public class Neo4j
     void ShortestPath() throws IOException {
     	try ( Transaction tx = graphDb.beginTx() )
     	{
-    		FileWriter writer = new FileWriter("/home/edraa/workspace/KGML/HumanOutputConnectedNeo4j.csv");
+    		FileWriter writer = new FileWriter("BacteriaOutputConnectedNeo4j.csv");
     		writer.append("q1, q2, edgeNum, patwayNumber, Time\n");
     		
-    		String csvFile = "/home/edraa/workspace/KGML/HumanoutputConnected.csv";
+    		String csvFile = "BacteriaoutputConnected.csv";
             BufferedReader br = null;
             String line = "";
             String cvsSplitBy = ",";
@@ -125,7 +125,7 @@ public class Neo4j
         registerShutdownHook( graphDb );
         // END SNIPPET: startDb
         
-        String csvFile = "/home/edraa/workspace/KGML/Nodes.csv";
+        String csvFile = "Nodes.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -152,7 +152,7 @@ public class Neo4j
 			   i++;
 			}
                
-            csvFile = "/home/edraa/workspace/KGML/Edges.csv";
+            csvFile = "Edges.csv";
             br = null;
             line = "";
             cvsSplitBy = ",";

@@ -82,12 +82,51 @@ Steps to run Raul's code to download pathways from sequence files (by Raul)
 			email.send("KOExtraction",sw.toString());
 ================================================================================================
 Steps to run Erick’s code (by Erick)
+All KGML functions require kgml.jar to run
 
-Generate CSV files for neo4j:
-
-Inverted list index generation: 
-
-parse KGML files: 
+	Generate Nodes and Edges CSV files for neo4j:
+	It takes the following arguments:
+		   -f folder that contains all the KGML files of Organism 
+		   -o output filename (no extension needed)
+		   
+		   For Example:
+		   java -cp kgml.jar KGMLFunctions.ParserTester GenerateCSVFiles -f Bacteria -o BacteriaData
+		   
+		   This will generate two csv files:
+		   BacteriaDataNodes.csv & BacteriaDataEdges.csv
+		   
+	Inverted list index generation: 
+	It takes the following arguments:
+		   -f folder that contains all the KGML files of Organism 
+		   -o output filename (no extension needed)
+		   
+		   For Example:
+		   java -cp kgml.jar KGMLFunctions.ParserTester InvertList -f Bacteria -o InvertedListBacteria
+	
+	Check which pathways are connected:
+	It takes the following arguments:
+		   -f folder that contains all the KGML files of Organism 
+		   -o output filename (no extension needed)
+		   
+		   For Example:
+		   java -cp kgml.jar KGMLFunctions.ParserTester isConnected -f Bacteria -o Connections
+		   
+	Generate Statistics of Pathways (# Nodes & Edges):
+	It takes the following arguments:
+		   -f folder that contains all the KGML files of Organism 
+		   -o output filename (no extension needed)
+		   
+		   For Example:
+		   java -cp kgml.jar KGMLFunctions.ParserTester GenerateStats -f Bacteria -o Output
+		   
+Steps to run Neo4j Code:
+	Calculating the ShortestPath between Nodes (FindShortestPath):
+		   -f Takes two Arguments, the Nodes and Edges csv files generated from GenerateCSVFiles in KGML Functions
+		   -o output filename (extension needed)
+		   -g Reference Files containing the KEGG entries that you want to find the shortest path between
+		   
+		   For Example: java -cp kgml.jar:neo4j/lib/* KGMLFunctions.Neo4j FindShortestPath -f BacteriaDataNodes.csv                                 BacteriaDataEdges.csv -o PathData.csv -g BacteriaOutputConnectedNeo4j-yifan.csv
+	
 
 ================================================================================================
 Resource to get sequence (FASTA) files (from 08/06/2015 Meeting)

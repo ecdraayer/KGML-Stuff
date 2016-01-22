@@ -10,10 +10,14 @@ import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 
-import KGMLParser.Pathway;
+import KGMLFunctions.Pathway;
 import KOExtraction.ExportCsv;
 import KOSearch.ReadCSV;
 
+/**
+ * @author Raul Alvarado
+ *
+ */
 public class QueryGenerator {
 	static ArrayList<ArrayList<String>> GeneNames = new ArrayList<ArrayList<String>>();
 	@SuppressWarnings({ "rawtypes", "unchecked" })

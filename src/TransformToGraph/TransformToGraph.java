@@ -2,11 +2,11 @@ package TransformToGraph;
 
 
 
-import KGMLParser.Kegg_Entry;
-import KGMLParser.Pathway;
-import KGMLParser.PathwayMap;
-import KGMLParser.Reaction;
-import KGMLParser.Relation;
+import KGMLFunctions.Kegg_Entry;
+import KGMLFunctions.Pathway;
+import KGMLFunctions.PathwayMap;
+import KGMLFunctions.Reaction;
+import KGMLFunctions.Relation;
 import KOExtraction.ExportCsv;
 import KOSearch.ReadCSV;
 
@@ -91,37 +91,8 @@ public class TransformToGraph extends JApplet {
 
 			
 			// TODO Auto-generated method stub
-			if (nv==true)
-		    {
-				TransformToGraph applet = new TransformToGraph();
-				applet.init();	
-				JFrame frame = new JFrame();
-		        frame.getContentPane().add(applet);		
-		        frame.setTitle("Pathway graph");
-		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		        frame.pack();
-		        frame.setVisible(true);
-		    }
-			if (xmlFolder.isEmpty()==false)
-			{
-				Organism = new PathwayMap( xmlFolder);	
-				AddVerticesAndEdgesFromXML(nv);
-			}
-			else
-			{
-				ReadCSV NodesCSV= new ReadCSV(csvFolder+ "/Nodes.csv");
-				ArrayList<String> GeneNames= NodesCSV.ReadCol(0);
-				
-				ArrayList<ArrayList<String>> Edges = new ArrayList<ArrayList<String>>();
-				ReadCSV Source= new ReadCSV(csvFolder+ "/Edges.csv");
-				Edges.add(Source.ReadCol(0));
-				ReadCSV Destination= new ReadCSV(csvFolder+ "/Edges.csv");
-				Edges.add(Destination.ReadCol(1));
-				
 		
-				AddVerticesAndEdgesFromCSV(GeneNames, Edges);
-			}
-			
+			BuildGraph(xmlFolder,csvFolder, nv);
 			//generate genes to query;
 			String[][] ToPrint= new String[k][6];
 			for (int i=0; i < k; i++)
@@ -135,6 +106,41 @@ public class TransformToGraph extends JApplet {
 	   
 		}
 	
+	}
+	public static ListenableGraph<String, DefaultEdge>  BuildGraph(String xmlFolder, String csvFolder, boolean nv )
+	{
+		if (nv==true)
+	    {
+			TransformToGraph applet = new TransformToGraph();
+			applet.init();	
+			JFrame frame = new JFrame();
+	        frame.getContentPane().add(applet);		
+	        frame.setTitle("Pathway graph");
+	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        frame.pack();
+	        frame.setVisible(true);
+	    }
+		
+		if (xmlFolder.isEmpty()==false)
+		{
+			Organism = new PathwayMap( xmlFolder);	
+			AddVerticesAndEdgesFromXML(nv);
+		}
+		else
+		{
+			ReadCSV NodesCSV= new ReadCSV(csvFolder+ "/Nodes.csv");
+			ArrayList<String> GeneNames= NodesCSV.ReadCol(0);
+			
+			ArrayList<ArrayList<String>> Edges = new ArrayList<ArrayList<String>>();
+			ReadCSV Source= new ReadCSV(csvFolder+ "/Edges.csv");
+			Edges.add(Source.ReadCol(0));
+			ReadCSV Destination= new ReadCSV(csvFolder+ "/Edges.csv");
+			Edges.add(Destination.ReadCol(1));
+			
+	
+			AddVerticesAndEdgesFromCSV(GeneNames, Edges);
+		}
+		return g;
 	}
 	public static  String GetRandomGene()
 	{		
@@ -156,8 +162,7 @@ public class TransformToGraph extends JApplet {
 		
 		
 	
-		
-		System.out.println("test" + g.edgesOf("path:ko00281"));
+		///System.out.println("test" + g.edgesOf("path:ko00281"));
 		//random gene in pathway	
 
 		
@@ -227,7 +232,7 @@ public class TransformToGraph extends JApplet {
 		
 		
 	}
-	public static void AddVerticesAndEdgesFromXML(boolean nv)
+	private static ListenableGraph<String, DefaultEdge> AddVerticesAndEdgesFromXML(boolean nv)
 	{
 		//g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     	ArrayList<Pathway> pathways = Organism.pathways;
@@ -254,7 +259,7 @@ public class TransformToGraph extends JApplet {
 			    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()),  col, Color.WHITE);
 			    		}
 			    		else
-			    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()), col.brighter(), Color.WHITE);
+			    			positionVertexAt(ko, Integer.parseInt(k.GetGraph().getX()),  Integer.parseInt(k.GetGraph().getY()), col, Color.WHITE);
 			    		
 			    			
 	    			}
@@ -279,13 +284,17 @@ public class TransformToGraph extends JApplet {
     				edge2=edge2 + cpway.getName();
 
     			
-    			System.out.println(r.getEntry1() + " " + edge1 + " " + r.getEntry2()+ " " + edge2);
+    			//System.out.println(r.getEntry1() + " " + edge1 + " " + r.getEntry2()+ " " + edge2);
     			try {
     				g.addEdge(edge1 ,edge2 );
     			}
     			catch(NullPointerException e)
     			{
     				System.out.println(g.vertexSet());
+    			}
+    			catch(IllegalArgumentException e)
+    			{
+    				System.out.println(edge1+  " " + edge2 );
     			}
     			//System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
     		}
@@ -304,6 +313,7 @@ public class TransformToGraph extends JApplet {
     		} 		 
     		
     	}
+		return g;
     	
    
     

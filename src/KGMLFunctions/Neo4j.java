@@ -222,8 +222,8 @@ public class Neo4j
         } );
     }
     // END SNIPPET: shutdownHook
-    
-    /* Method to find the index that an entry that exists in the Nodes Array */
+
+    // Method to find the index that an entry that exists in the Nodes Array //
     public int findIndex(String s){
        String a = "";
        for(int i=0; i<nodes.length; i++) {

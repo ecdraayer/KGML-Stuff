@@ -1,7 +1,7 @@
 package TransformToGraph;
 
-import KGMLParser.Kegg_Entry;
-import KGMLParser.Pathway;
+import KGMLFunctions.Kegg_Entry;
+import KGMLFunctions.Pathway;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;

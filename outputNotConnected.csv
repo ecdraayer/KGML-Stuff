@@ -1,0 +1,12 @@
+q1,q2,edgeNum,pathwayNumber,ShortestPath
+cpd:C00111,ko:K00808, , , ,
+path:ko00030,cpd:C16474, , , ,
+ko:K07408 ko:K07410,cpd:C00259, , , ,
+ko:K06660,ko:K00611, , , ,
+ko:K11229,ko:K01905, , , ,
+ko:K04456,ko:K04357, , , ,
+cpd:C02918,ko:K00166 ko:K00167 ko:K11381, , , ,
+ko:K00025 ko:K00026 ko:K00024,cpd:C06587, , , ,
+cpd:C00219,ko:K00273, , , ,
+cpd:C05005,ko:K01640, , , ,
+cpd:C06006,ko:K00394 ko:K00395, , , ,

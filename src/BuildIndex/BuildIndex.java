@@ -26,11 +26,14 @@ public class BuildIndex {
 		// TODO Auto-generated method stub
 
 		ListenableGraph<String, DefaultEdge> Dgraph = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
-		Dgraph =TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls", "", true);
-		
+		//Dgraph =TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
+		Dgraph= TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls", "", false);	
 		DirectedtoUndirected(Dgraph);
 		
 		ArrayList<String> LandMarks = new ArrayList<String> ();
+		//LandMarks.add("ko:K09458");
+		//LandMarks.add("ko:K11533");
+		LandMarks.add("80");
 		LandMarks.add("39");
 		DistancesFromLandmark(g, LandMarks);
 	}
@@ -43,8 +46,12 @@ public class BuildIndex {
 	
 		for(DefaultEdge edges : Dgraph.edgeSet())
 		{
-			
-			g.addEdge(Dgraph.getEdgeSource(edges), Dgraph.getEdgeTarget(edges));
+			//avoid loops
+			if (!Dgraph.getEdgeSource(edges).equals(Dgraph.getEdgeTarget(edges)))
+			{
+				//System.out.println("Loop" + edges);
+				g.addEdge(Dgraph.getEdgeSource(edges), Dgraph.getEdgeTarget(edges));
+			}
 		}
 		return g;
 		
@@ -52,21 +59,19 @@ public class BuildIndex {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void DistancesFromLandmark(ListenableUndirectedGraph<String, DefaultEdge> Ugraph ,ArrayList<String> Landmarks )
 	{
-		String[][] Distances  = new String[Ugraph.vertexSet().size()-1][3];
+		String[][] Distances  = new String[(Ugraph.vertexSet().size()* Landmarks.size()) ][3];
+		int j=0;
 		for (int i=0; i < Landmarks.size();i++)
 		{
-			int j=0;
 			for (String vertex: Ugraph.vertexSet())
 			{
-				if (!Landmarks.get(i).equals(vertex))
-				{
-					DijkstraShortestPath d= new DijkstraShortestPath(g, Landmarks.get(i), vertex);
-					Distances[j][0]=Landmarks.get(i);
-					Distances[j][1]=vertex;
-					Distances[j][2]= Double.toString(d.getPathLength());
-					System.out.println("From: " +Landmarks.get(0) + " to: " + vertex + " distance " + d.getPathLength());
-					j++;
-				}
+				
+				DijkstraShortestPath d= new DijkstraShortestPath(g, Landmarks.get(i), vertex);
+				Distances[j][0]=Landmarks.get(i);
+				Distances[j][1]=vertex;
+				Distances[j][2]= Double.toString(d.getPathLength());
+				System.out.println("From: " +Landmarks.get(i) + " to: " + vertex + " distance " + d.getPathLength());
+				j++;
 			}
 		}
 		WriteIndex(Distances);

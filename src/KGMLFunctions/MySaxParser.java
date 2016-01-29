@@ -3,7 +3,7 @@
  * Written:            7/27/15
  * Last Updated:       7/27/15
  * 
- * Parses KGML files using SAX and stores the information in a Pathway class
+ * Parses KGML files using SAX and stores the information in a Pathway DataStructures (ArrayLists)
  *
  *-----------------------------------------------------------------------------*/
 
@@ -19,7 +19,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class MySaxParser extends DefaultHandler {
     String KeggXmlFileName; /* Name of file being parsed */
     
-    /* type values storing various data */
+    /* temp values storing various data */
     String tmpValue;
     Kegg_Entry entryTmp;  
     Relation relationTmp;
@@ -39,6 +39,7 @@ public class MySaxParser extends DefaultHandler {
         pathwaytmp = pathway;
         parseDocument();
     }
+    
     /*-----------------------------------------------------------------------------
      * Parse function that makes sure the SAX parser can operate on the given file,
      * gives error if there is an error in the file or IO problem

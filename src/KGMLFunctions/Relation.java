@@ -1,3 +1,12 @@
+/*-------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * Relation class - Stores the information of the relation of a given pathway (edge)
+ *                   
+ *-----------------------------------------------------------------------------*/
+
 package KGMLFunctions;
 import java.util.ArrayList;
 
@@ -8,12 +17,15 @@ public class Relation {
     String type;
     ArrayList<Subtype> subtypes;
     
+    //constructor
     public Relation(){
     	subtypes = new ArrayList<Subtype>();
     	entry1 = null;
     	entry2 = null;
     	type = null;
     }
+    
+    //getters and setters
 	public String getEntry1() {
 		return entry1;
 	}
@@ -38,6 +50,9 @@ public class Relation {
 	public void setSubtypes(ArrayList<Subtype> subtypes) {
 		this.subtypes = subtypes;
 	}
+	
+	//toString
+	@Override
 	public String toString(){
 		String result = "";
 		result += "relation :: [entry1=" + entry1 + " entry2=" + entry2 + "type=" + type + "]";

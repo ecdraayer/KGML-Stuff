@@ -4,7 +4,7 @@ package KGMLFunctions;
  * Written:            7/27/15
  * Last Updated:       7/27/15
  * 
- * Class that stores the data for the element "entry" 
+ * Class that stores the data for the element "entry" (Nodes)
  *-----------------------------------------------------------------------------*/
 public class Kegg_Entry {
 	String id;
@@ -36,7 +36,8 @@ public class Kegg_Entry {
     }
     
     
-    public String toString(){
+    @Override
+	public String toString(){
     	String result = ""; //Add GraphInfo to test if it is correct
     	result += "Entry :: ";
     	result += "[ID = " + id + " Name = " + name + " Type = " + type + " Reaction = " + reaction + " Link = " + link + "]";

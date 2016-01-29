@@ -1,3 +1,12 @@
+/*-------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * Reaction class - Stores the information of the reactions of a given pathway  (edge)
+ *                   
+ *-----------------------------------------------------------------------------*/
+
 package KGMLFunctions;
 import java.util.ArrayList;
 
@@ -7,6 +16,8 @@ public class Reaction {
     String type;
     ArrayList<Substrate> substrate;
     ArrayList<Product> product;
+    
+    //constructor
     public Reaction(){
     	id = null;
     	name = null;
@@ -14,6 +25,8 @@ public class Reaction {
     	substrate = new ArrayList<Substrate>();
     	product = new ArrayList<Product>();
     }
+    
+    //getters and setters
 	public String getId() {
 		return id;
 	}
@@ -32,7 +45,6 @@ public class Reaction {
 	public void setType(String type) {
 		this.type = type;
 	}
-
 	public ArrayList<Substrate> getSubstrate() {
 		return substrate;
 	}
@@ -46,7 +58,8 @@ public class Reaction {
 		this.product = product;
 	}
 
-	
+	//toString
+	@Override
 	public String toString(){
 		String result = "";
 		result += "reaction :: [id=" + id + " name=" + name + " type=" + type + "]";

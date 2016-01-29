@@ -1,15 +1,24 @@
+/*-------------------------------------------------------------------------------
+ * Author:             Erick Draayer
+ * Written:            7/27/15
+ * Last Updated:       7/27/15
+ * 
+ * Graph class - Stores the information of the Graph Information of a entry (Node in KGML file)
+ *                   
+ *-----------------------------------------------------------------------------*/
 package KGMLFunctions;
 
 public class Graph {
     String name;
-    String fgcolor;
-    String bgcolor;
+    String fgcolor; //foreground color
+    String bgcolor; //background color
     String type;
     String x;
     String y;
     String width;
     String height;
     
+    //constructor
     public Graph(String name, String fgcolor, String bgcolor, String type, String x, String y, String width, String height){
     	if (x == null)
     		x="0";
@@ -25,6 +34,8 @@ public class Graph {
     	this.width = width;
     	this.height = height;
     }
+    
+    //getters and setters
 	public String getName() {
 		return name;
 	}
@@ -73,7 +84,10 @@ public class Graph {
 	public void setHeight(String height) {
 		this.height = height;
 	}
-    public String toString(){
+	
+	//toString
+    @Override
+	public String toString(){
     	String result = "";
     	result += "name=" + name + " fgcolor=" + fgcolor + " bgcolor=" + bgcolor + " type=" + type + " x=" + x + " y=" + y + " width=" + width + " height=" + height;
     	return result;

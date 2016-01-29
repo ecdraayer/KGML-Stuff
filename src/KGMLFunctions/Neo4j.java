@@ -234,7 +234,7 @@ public class Neo4j
        
         return -1; //Entry is not in the Nodes Array
     }
-
+    
     /* Method to find the total about of Nodes in our Graph */
     private int count(String filename) throws IOException {
 	   BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));

@@ -6,12 +6,17 @@ import java.util.ArrayList;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableDirectedGraph;
+import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 import org.jgrapht.graph.ListenableUndirectedGraph;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 import KOExtraction.ExportCsv;
 import TransformToGraph.TransformToGraph;
+import TransformToGraph.WeightedEdge;
 
 /**
  * Generate index based on landmarks and calculates distances.
@@ -19,45 +24,46 @@ import TransformToGraph.TransformToGraph;
  *
  */
 public class BuildIndex {
-	static ListenableUndirectedGraph<String, DefaultEdge> g =new ListenableUndirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+	static SimpleWeightedGraph<String,  DefaultWeightedEdge> g =new SimpleWeightedGraph<String,  DefaultWeightedEdge>( DefaultWeightedEdge.class);
+	//static ListenableUndirectedGraph<String, DefaultWeightedEdge> g =new ListenableUndirectedGraph<String,  DefaultWeightedEdge>( DefaultWeightedEdge.class);
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		ListenableGraph<String, DefaultEdge> Dgraph = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
-		//Dgraph =TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
-		Dgraph= TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls", "", false);	
-		DirectedtoUndirected(Dgraph);
+		ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = new ListenableDirectedWeightedGraph<String,  WeightedEdge>( WeightedEdge.class);
+		Dgraph =TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
+		//Dgraph= TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls","", false);	
+		g=DirectedtoUndirected(Dgraph);
 		
 		ArrayList<String> LandMarks = new ArrayList<String> ();
-		//LandMarks.add("ko:K09458");
-		//LandMarks.add("ko:K11533");
-		LandMarks.add("80");
-		LandMarks.add("39");
+		LandMarks.add("ko:K09458");
+		LandMarks.add("ko:K11533");
+		//LandMarks.add("80");
+		//LandMarks.add("39");
 		DistancesFromLandmark(g, LandMarks);
 	}
-	public static ListenableUndirectedGraph<String, DefaultEdge> DirectedtoUndirected(ListenableGraph<String, DefaultEdge> Dgraph)
+	public static SimpleWeightedGraph<String,  DefaultWeightedEdge> DirectedtoUndirected(ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph)
 	{
 		for(String vertex:Dgraph.vertexSet())
 		{
 			g.addVertex(vertex);
 		}
-	
-		for(DefaultEdge edges : Dgraph.edgeSet())
+		for(WeightedEdge edges : Dgraph.edgeSet())
 		{
 			//avoid loops
 			if (!Dgraph.getEdgeSource(edges).equals(Dgraph.getEdgeTarget(edges)))
 			{
-				//System.out.println("Loop" + edges);
-				g.addEdge(Dgraph.getEdgeSource(edges), Dgraph.getEdgeTarget(edges));
+				DefaultWeightedEdge d = g.addEdge(Dgraph.getEdgeSource(edges), Dgraph.getEdgeTarget(edges));
+				if (d!=null)
+					g.setEdgeWeight(d,Dgraph.getEdgeWeight(edges));
 			}
 		}
 		return g;
 		
 	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void DistancesFromLandmark(ListenableUndirectedGraph<String, DefaultEdge> Ugraph ,ArrayList<String> Landmarks )
+	private static void DistancesFromLandmark(SimpleWeightedGraph<String,  DefaultWeightedEdge> Ugraph ,ArrayList<String> Landmarks )
 	{
 		String[][] Distances  = new String[(Ugraph.vertexSet().size()* Landmarks.size()) ][3];
 		int j=0;

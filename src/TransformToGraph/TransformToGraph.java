@@ -40,10 +40,10 @@ public class TransformToGraph extends JApplet {
 	private static final long serialVersionUID = 7980400801849305625L;
 	
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
-    private static JGraphModelAdapter<String, DefaultEdge> jgAdapter;
+    private static JGraphModelAdapter<String, WeightedEdge> jgAdapter;
 
     static PathwayMap Organism;    
-	static ListenableGraph<String, DefaultEdge> g =new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+	static ListenableDirectedWeightedGraph<String, WeightedEdge> g =new ListenableDirectedWeightedGraph<String,  WeightedEdge>( WeightedEdge.class);
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
@@ -107,7 +107,7 @@ public class TransformToGraph extends JApplet {
 		}
 	
 	}
-	public static ListenableGraph<String, DefaultEdge>  BuildGraph(String xmlFolder, String csvFolder, boolean nv )
+	public static ListenableDirectedWeightedGraph<String, WeightedEdge>  BuildGraph(String xmlFolder, String csvFolder, boolean nv )
 	{
 		if (nv==true)
 	    {
@@ -136,11 +136,13 @@ public class TransformToGraph extends JApplet {
 			Edges.add(Source.ReadCol(0));
 			ReadCSV Destination= new ReadCSV(csvFolder+ "/Edges.csv");
 			Edges.add(Destination.ReadCol(1));
+			ReadCSV Weigths= new ReadCSV(csvFolder+ "/Edges.csv");
+			Edges.add(Weigths.ReadCol(2));
 			
 	
 			AddVerticesAndEdgesFromCSV(GeneNames, Edges);
 		}
-		return g;
+		return  g;
 	}
 	public static  String GetRandomGene()
 	{		
@@ -166,7 +168,7 @@ public class TransformToGraph extends JApplet {
 		//random gene in pathway	
 
 		
-		return Genedata.toString();
+		return Genedata;
 	}
 	public static void OutputResults(String[][] ToPrint)
 	{
@@ -197,7 +199,7 @@ public class TransformToGraph extends JApplet {
 		 // create a JGraphT graph
 	
 		 // create a visualization using JGraph, via an adapter
-		jgAdapter = new JGraphModelAdapter<String, DefaultEdge>(g);
+		jgAdapter = new JGraphModelAdapter<String,  WeightedEdge>(g);
 		JGraph jgraph = new JGraph(jgAdapter);
 
         adjustDisplaySettings(jgraph);
@@ -221,18 +223,29 @@ public class TransformToGraph extends JApplet {
 			GeneName.replace(")", "]");
 			g.addVertex(GeneName);
 			
+			
 		}
 		for (int i=0; i < edges.get(0).size(); i++)
 		{
-			System.out.println("Source: " +edges.get(0).get(i) + " Destination: " +edges.get(1).get(i) );
+			System.out.println("Source: " +edges.get(0).get(i) + " Destination: " +edges.get(1).get(i) + " Weight: " + edges.get(2).get(i) );
 			//do not add relations to genes not included in KGML file
 			if (g.containsVertex(edges.get(0).get(i)) && g.containsVertex(edges.get(1).get(i)))
-				g.addEdge(edges.get(0).get(i).trim() ,edges.get(1).get(i).trim() );
+			{
+				//loops are not allow in simple weighted graph
+				if (!edges.get(0).get(i).equals(edges.get(1).get(i)))
+				{
+					WeightedEdge  e;			
+					e=g.addEdge(edges.get(0).get(i) ,edges.get(1).get(i) );				
+					if (e!=null)
+						g.setEdgeWeight(e, Double.parseDouble(edges.get(2).get(i)));
+				}
+			}
+			
 		}
 		
 		
 	}
-	private static ListenableGraph<String, DefaultEdge> AddVerticesAndEdgesFromXML(boolean nv)
+	private static void AddVerticesAndEdgesFromXML(boolean nv)
 	{
 		//g=new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     	ArrayList<Pathway> pathways = Organism.pathways;
@@ -247,6 +260,7 @@ public class TransformToGraph extends JApplet {
 	    			for(Kegg_Entry k : cpway.getEntryL()){   	
 	    		
 	    			String ko= k.getName();
+	    		
 	    			
 	    			if (ko.equals("undefined")==true)
 	    				ko=ko + cpway.getName();
@@ -284,17 +298,20 @@ public class TransformToGraph extends JApplet {
     				edge2=edge2 + cpway.getName();
 
     			
-    			//System.out.println(r.getEntry1() + " " + edge1 + " " + r.getEntry2()+ " " + edge2);
+    			//System.out.println("Source " + edge1 + " Destination: " + " " + edge2);
     			try {
-    				g.addEdge(edge1 ,edge2 );
+    				WeightedEdge  e;		
+    				e=g.addEdge(edge1 ,edge2 );
+    				
+    				g.setEdgeWeight((WeightedEdge) e, r.getWeight());
     			}
     			catch(NullPointerException e)
     			{
-    				System.out.println(g.vertexSet());
+    				System.out.println("**error**  vertset "+ g.vertexSet());
     			}
     			catch(IllegalArgumentException e)
     			{
-    				System.out.println(edge1+  " " + edge2 );
+    				System.out.println("**error**  edges" + edge1+  " " + edge2 );
     			}
     			//System.out.println("Relations " + cpway.GetNameFromId(r.getEntry1()) +"-" + r.getEntry1() + " " + cpway.GetNameFromId(r.getEntry2())+ "-" + r.getEntry2() );
     		}
@@ -313,7 +330,6 @@ public class TransformToGraph extends JApplet {
     		} 		 
     		
     	}
-		return g;
     	
    
     

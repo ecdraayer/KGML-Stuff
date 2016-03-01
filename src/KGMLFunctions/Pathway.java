@@ -138,7 +138,7 @@ public class Pathway {
 	    return pathname;
     }
 	
-	/*
+	
     public Kegg_Entry GetPathwayFromGene(String name){
         Kegg_Entry entry = new Kegg_Entry(); 
 	  	   for(Kegg_Entry k : entryL){
@@ -149,6 +149,6 @@ public class Pathway {
 	  	 	  }
 	  	   }
 	  	return entry;
-    }*/
+    }
 
 }

@@ -18,7 +18,7 @@ public class ParserTester {
     	int j=0;
 
     	try {	
-    		if (args.length >= 5)
+    		if (args.length >= 4)
     		{
     			while (j < args.length)
     			{
@@ -59,7 +59,7 @@ public class ParserTester {
     			Organism.isConnected(output);
     		}
     	} catch(Exception e){
-    		System.err.println("Error with command line");
+    		System.err.println("Error with command line " + e);
     	}
     }
 	

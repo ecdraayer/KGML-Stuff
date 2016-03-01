@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 public class ReadIndex {
 	private String indexFile;
@@ -25,10 +26,13 @@ public class ReadIndex {
 		}
 	}
 
-	public ArrayList<ArrayList<String>>  ReadRow()
+	public TreeMap<String, TreeMap<String, ArrayList<String>>>  ReadRow()
 	{
 		String line="";
-		ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+
+		TreeMap<String ,TreeMap<String, ArrayList<String>>> tm = new TreeMap<String, TreeMap<String, ArrayList<String>>>();
+		TreeMap<String, ArrayList<String>> content =  new TreeMap<String, ArrayList<String>>();
+		String Landmark= "";
 		try {
 			fileReader = new FileReader(indexFile);
 		} catch (FileNotFoundException e1) {
@@ -44,18 +48,33 @@ public class ReadIndex {
 				
 				if (i>0)
 				{
-					ArrayList<String> Cells = new ArrayList<String>(Arrays.asList(line.split(",")));
 					
-					table.add(Cells);
-				}
-				i++;
+					ArrayList<String> Cells = new ArrayList<String>(Arrays.asList(line.split(",")));
+					if (i==1)
+						Landmark=Cells.get(0);
+					
+					if (Landmark.equals(Cells.get(0)))
+						content.put(Cells.get(1), Cells);
+					else
+					{
+						tm.put(Landmark, content);
+						Landmark=Cells.get(0);
+						content =  new TreeMap<String, ArrayList<String>>();
+						content.put(Cells.get(1), Cells);
+					}					
 				
+				}
+				i++;				
 				
 			}
+			//add last landmark
+			tm.put(Landmark, content);
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return table;
+		return tm;
 	}
 }

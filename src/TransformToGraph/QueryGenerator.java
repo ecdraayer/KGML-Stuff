@@ -8,7 +8,11 @@ import java.util.Set;
 
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.ListenableDirectedWeightedGraph;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 import KGMLFunctions.Pathway;
 import KOExtraction.ExportCsv;
@@ -76,7 +80,7 @@ public class QueryGenerator {
 			GeneNames.add(Destination.ReadCol(1));
 		
 			
-			ListenableGraph<String, DefaultEdge> g = TransformToGraph.g;
+			ListenableDirectedWeightedGraph<String, WeightedEdge> g = TransformToGraph.g;
 
 			String[][] ToPrint= new String[GeneNames.get(0).size()*2][6];
 			String Gene1 = null,Gene2 = null, temp;

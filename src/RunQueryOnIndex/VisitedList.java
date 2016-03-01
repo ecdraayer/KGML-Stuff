@@ -1,17 +1,24 @@
 package RunQueryOnIndex;
 
-public class VisitedList {
+import java.util.ArrayList;
 
+public class VisitedList extends ArrayList<VisitedList>  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String Name;
 	private String Discoverer;
 	private int DistancefromStart;
+	private double DistaceToLandmark;
 
 	public VisitedList(String Name, String Discoverer, int DistrancefromStart)
 	{
 		this.setName(Name);
 		this.setDiscoverer(Discoverer);
 		this.setDistancefromStart(DistrancefromStart);
-
+		this.setDistaceToLandmark(DistaceToLandmark);
 	}
 
 	public String getName() {
@@ -39,7 +46,16 @@ public class VisitedList {
 	}
 	public String toString(){
 		String result = "\n";
-		result += "Name=" + Name + " Discoverer=" + Discoverer + " Distance=" + DistancefromStart ;
+		result += "Name=" + Name + " Discoverer=" + Discoverer + " Distance=" + DistancefromStart + " distaceToLandmark=" + DistaceToLandmark; 
 		return result;
 	}
+
+	public double getDistaceToLandmark() {
+		return DistaceToLandmark;
+	}
+
+	public void setDistaceToLandmark(double distaceToLandmark2) {
+		DistaceToLandmark = distaceToLandmark2;
+	}
+	
 }

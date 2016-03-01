@@ -6,23 +6,50 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Hashtable;
+
+import javax.management.ObjectName;
 
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.PathExpanders;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.neo4j.helpers.collection.IteratorUtil;
 import org.neo4j.io.fs.FileUtils;
+import org.neo4j.tooling.GlobalGraphOperations;
 
-public class Neo4j
+import com.sun.javafx.logging.JFRInputEvent;
+
+import org.neo4j.io.pagecache.PageSwapper;
+import org.neo4j.io.pagecache.tracing.DefaultPageCacheTracer;
+import org.neo4j.io.pagecache.tracing.EvictionRunEvent;
+import org.neo4j.io.pagecache.tracing.MajorFlushEvent;
+import org.neo4j.io.pagecache.tracing.PageCacheTracer;
+import org.neo4j.io.pagecache.tracing.PinEvent;
+import org.neo4j.jmx.JmxUtils;
+import org.neo4j.kernel.impl.util.JobScheduler;
+import org.neo4j.kernel.monitoring.Monitors;
+import org.neo4j.kernel.monitoring.tracing.DefaultTracerFactory;
+import org.neo4j.kernel.monitoring.tracing.TracerFactory;
+import org.neo4j.kernel.monitoring.tracing.Tracers;
+
+
+public class Neo4j 
 {
     private static final String DB_PATH = "neo4j/data/graph.db";
+
+	private static TracerFactory foundFactory; 
+	private static PageCacheTracer pageCacheTracer;
     
     // START SNIPPET: vars
     GraphDatabaseService graphDb;
@@ -51,7 +78,7 @@ public class Neo4j
     	int j = 0;
     	
     	try {	
-    		if (args.length >= 8)
+    		if (args.length >= 3)
     		{
     			while (j < args.length)
     			{
@@ -80,21 +107,21 @@ public class Neo4j
     			}
     		}
     		
-            EdgesFile = "BacteriaEdges.csv";
-            NodesFile = "BacteriaNodes.csv";
+
             OutputFile = "PathData.csv";
             ReferenceFile = "BacteriaOutputConnectedNeo4j-yifan.csv";
     		//Find shortest paths from database
-    		//if (args[0].equals("FindShortestPath")) {
-    			Neo4j hello = new Neo4j();
-    	        hello.createDb(NodesFile, EdgesFile); //Create Database
-    	        //hello.removeData(); (not working)
-    	        /* Currently trying to find a way to not have to create the database every time we want to do a shortest path calculation */
-    	        hello.ShortestPath(ReferenceFile, OutputFile); //Find shortestPaths, given a reference file
-    	        hello.shutDown();
-    		//}
+
+    		Neo4j Database = new Neo4j();
+    		Database.deleteDB();
+    		Database.startDb(); //Create Database
+    		Database.loadCSV(NodesFile, EdgesFile);
+    	   
+    		//Database.ShortestPath(ReferenceFile, OutputFile); //Find shortestPaths, given a reference file
+    	    Database.shutDown();
+
     	} catch(Exception e){
-    		System.err.println("Error with command line");
+    		System.err.println("Error with command line " + e.toString());
     	}
     }
     
@@ -184,71 +211,135 @@ public class Neo4j
      * Input: String NodesFile - csv file containing all the Nodes needed to make the database
      *        String EdgesFile - csv file containing all the edges information needed to make the database
      *--------------------------------------------------------------------------*/
-    void createDb(String NodesFile, String EdgesFile) throws IOException
+    public void deleteDB()
     {
-        FileUtils.deleteRecursively( new File( DB_PATH ) );
+    	try {
+			FileUtils.deleteRecursively( new File( DB_PATH ) );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
+    private static String getStartTimeFromManagementBean(GraphDatabaseService graphDbService )
+    {
+        ObjectName objectName = JmxUtils.getObjectName( graphDbService, "Configuration" );
+        String date = JmxUtils.getAttribute( objectName, "store_dir" );
+    
+        //final Class<JobScheduler> jobScheduler =  JobScheduler.class;
+        //final Monitors monitors = new Monitors();
+
+        System.out.println(pageCacheTracer.toString());
+        return date;
+    }
+    void startDb() throws IOException
+    {
+    	
         // START SNIPPET: startDb
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "neo4j/data/graph.db" );
+        
+        //graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        graphDb = new GraphDatabaseFactory()
+        	    .newEmbeddedDatabaseBuilder(DB_PATH )
+        	    .setConfig( GraphDatabaseSettings.pagecache_memory, "512K" )        	    
+        	    .newGraphDatabase();
         registerShutdownHook( graphDb );
         // END SNIPPET: startDb
-        
+        foundFactory = new DefaultTracerFactory();
+        DefaultPageCacheTracer.enablePinUnpinTracing();
+        pageCacheTracer = foundFactory.createPageCacheTracer( );
+   
+       
+        try ( Transaction tx = graphDb.beginTx() )
+        {
+			int nodeCount = IteratorUtil.count(GlobalGraphOperations.at(graphDb).getAllNodes());
+			int edgeCount = IteratorUtil.count(GlobalGraphOperations.at(graphDb).getAllRelationships());
+		
+			System.out.println("Nodes " + nodeCount);
+			System.out.println("Edges " + edgeCount);
+			System.out.println("Edges " + getStartTimeFromManagementBean(graphDb));
+	
+			tx.success();
+        }
+	
+    }
+    
+    void loadCSV(String NodesFile, String EdgesFile)
+    {
 		// START SNIPPET: For reading the given csv file
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
-        br = new BufferedReader(new FileReader(NodesFile));
-        line = br.readLine();
-        int i = 0;      //The Index 
-        nodes = new Node[count(NodesFile)];
-        // END SNIPPET: For reading the given csv file 
+        int i = 0;  
+        try {
+			br = new BufferedReader(new FileReader(NodesFile));
+			try {
+				line = br.readLine();
+			
+	        nodes = new Node[count(NodesFile)];
+	        // END SNIPPET: For reading the given csv file 
+	        
 
         
-        // START SNIPPET: transaction
-        try ( Transaction tx = graphDb.beginTx() )
-        {
-			while ((line = br.readLine()) != null) {
-
-        	   String[] Entry = line.split(cvsSplitBy);
-        	   
-               nodes[i] = graphDb.createNode();
-               //properties of a node
-               nodes[i].setProperty( "name", Entry[0] );     //Name of Kegg entry
-               nodes[i].setProperty( "type", Entry[1] );     //Type of Kegg entry
-               nodes[i].setProperty( "reaction", Entry[2]);  //Type of reaction Kegg entry is
-               nodes[i].setProperty( "PathwayID", Entry[3]); //Pathway the Kegg entry belongs to
-			   i++;
+	        // START SNIPPET: transaction
+	        try ( Transaction tx = graphDb.beginTx() )
+	        {
+				while ((line = br.readLine()) != null) {
+	
+	        	   String[] Entry = line.split(cvsSplitBy);
+	        	   
+	               nodes[i] = graphDb.createNode();
+	               Label myLabel = DynamicLabel.label("Nodes");
+	              
+	               nodes[i].addLabel(myLabel);
+	               //properties of a node
+	               nodes[i].setProperty( "name", Entry[0] );     //Name of Kegg entry
+	               nodes[i].setProperty( "type", Entry[1] );     //Type of Kegg entry
+	               nodes[i].setProperty( "reaction", Entry[2]);  //Type of reaction Kegg entry is
+	               nodes[i].setProperty( "PathwayID", Entry[3]); //Pathway the Kegg entry belongs to
+	              
+	               
+				   i++;
+				}
+	            
+				// START SNIPPET: For reading the given csv file
+	            br = null;
+	            line = "";
+	            cvsSplitBy = ",";
+	            br = new BufferedReader(new FileReader(EdgesFile));
+	            line = br.readLine();
+	            i = 0;
+	           // END SNIPPET: For reading the given csv file 
+	           
+	            while ((line = br.readLine()) != null) {
+	               String[] Edge = line.split(cvsSplitBy);
+	               //System.out.println(Edge[0] + " " + Edge[1]); //For Debugging
+	               int a = findIndex(Edge[0]); //Find the Index of the Source Node
+	               int b = findIndex(Edge[1]); //Find the Index of the target Node
+	               
+	               //If a or b = -1, that means the edge is making a reference to a Node that is not expressed as an Entry in the xml files and should therefore be ignored
+	               if ( a == -1 || b == -1)
+	                  System.out.println(Edge[0] + " " + a + " " + Edge[1] + " " + b + " " + Edge[4] );  //This prints out the Nodes that should be ignored
+	               
+	               if( a != -1 && b != -1) {
+	            	  //Create the Relationship between the nodes
+	                  relationship = nodes[a].createRelationshipTo( nodes[b], RelTypes.CONNECTED );
+	                  relationship.setProperty( "Weight", Edge[2] );
+	                  relationship.setProperty( "Type", Edge[3] );
+	                  relationship.setProperty( "EdgeType", Edge[4] );	                
+	               }
+	               // END SNIPPET: addData
+	            }
+	            tx.success();
+	        }
+			} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 			}
-            
-			// START SNIPPET: For reading the given csv file
-            br = null;
-            line = "";
-            cvsSplitBy = ",";
-            br = new BufferedReader(new FileReader(EdgesFile));
-            line = br.readLine();
-            i = 0;
-           // END SNIPPET: For reading the given csv file 
-           
-            while ((line = br.readLine()) != null) {
-               String[] Edge = line.split(cvsSplitBy);
-               //System.out.println(Edge[0] + " " + Edge[1]); //For Debugging
-               int a = findIndex(Edge[0]); //Find the Index of the Source Node
-               int b = findIndex(Edge[1]); //Find the Index of the target Node
-               
-               //If a or b = -1, that means the edge is making a reference to a Node that is not expressed as an Entry in the xml files and should therefore be ignored
-               if ( a == -1 || b == -1)
-                  System.out.println(Edge[0] + " " + a + " " + Edge[1] + " " + b + " " + Edge[4] );  //This prints out the Nodes that should be ignored
-               
-               if( a != -1 && b != -1) {
-            	  //Create the Relationship between the nodes
-                  relationship = nodes[a].createRelationshipTo( nodes[b], RelTypes.CONNECTED );
-                  relationship.setProperty( "Type", Edge[2] );
-                  relationship.setProperty( "EdgeType", Edge[3] );
-               }
-               // END SNIPPET: addData
-            }
-            tx.success();
-        }
+		        
+        } catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         // END SNIPPET: transaction
     }
 
@@ -319,4 +410,5 @@ public class Neo4j
        System.out.println(count);
        return (count - 1); // Subtract 1 for Header File 
     }
+
 }

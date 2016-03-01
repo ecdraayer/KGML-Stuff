@@ -3,31 +3,39 @@ package RunQueryOnIndex;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.TreeMap;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
 import org.jgrapht.ListenableGraph;
+import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.GraphPathImpl;
+import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 import org.jgrapht.graph.ListenableUndirectedGraph;
-import org.jgrapht.traverse.ClosestFirstIterator;
+//import org.jgrapht.traverse.ClosestFirstIterator;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 import BuildIndex.BuildIndex;
 import KOExtraction.ExportCsv;
 import KOSearch.ReadCSV;
 import TransformToGraph.TransformToGraph;
+import TransformToGraph.WeightedEdge;
 
 public class RunQueryOnIndex {
 
+	/**
+	 * 
+	 */
+
 	static ReadIndex Index = new ReadIndex("_idx.csv");
-	static ArrayList<ArrayList<String>> indexContent;	
+	static TreeMap<String, TreeMap<String, ArrayList<String>>> indexContent;	
 	
 	
 	static ArrayList<VisitedList> VisitedList;
@@ -37,21 +45,25 @@ public class RunQueryOnIndex {
 	static int distance= 0;
 	static String lastVisited="";
 	static boolean visitedFound=true;
+	static SimpleWeightedGraph<String, DefaultWeightedEdge> graph;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//call graph
-		ListenableGraph<String, DefaultEdge> Dgraph = TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
-		//ListenableGraph<String, DefaultEdge> Dgraph = TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls", "", false);	
-		ListenableUndirectedGraph<String, DefaultEdge> graph=BuildIndex.DirectedtoUndirected(Dgraph);
+		ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
+		//ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls","", false);	
+		graph=BuildIndex.DirectedtoUndirected(Dgraph);
 		
 		
 		ArrayList<ArrayList<String>> VertexToQuery  = new ArrayList<ArrayList<String>>();
 		//read from genetoquery.csv		
-		ReadCSV Source= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");			
+		ReadCSV Source= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");
+		//ReadCSV Source= new ReadCSV("GenesToQuery.csv");	
 		VertexToQuery.add(Source.ReadCol(0));
 		ReadCSV Destination= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");
+		//ReadCSV Destination= new ReadCSV("GenesToQuery.csv");
 		VertexToQuery.add(Destination.ReadCol(1));
 		
+
 		String[][] ToPrint= new String[VertexToQuery.get(0).size()][5];
 		for (int i=0; i < VertexToQuery.get(0).size(); i++)
 		{
@@ -66,32 +78,30 @@ public class RunQueryOnIndex {
 			ArrayList<String> Queryvertexes  = new ArrayList<String>();
 			Queryvertexes.add(VertexToQuery.get(0).get(i));
 			Queryvertexes.add(VertexToQuery.get(1).get(i));
-			//Queryvertexes.add("75");
-			//Queryvertexes.add("82");
+
 			
-			
+			System.out.println("Query: " +Queryvertexes  );
 			ArrayList<ArrayList<String>> LandmarkIndex = LoadIndex(Index, Queryvertexes);
 			System.out.println("Index content " +LandmarkIndex  );
 			
-			ArrayList<String> maxDistance=getMaxDistance(graph, LandmarkIndex,Queryvertexes.get(0), Queryvertexes.get(1));
-			System.out.println("maxDistance " +maxDistance.get(1)  + " Landmark " + maxDistance.get(0));
+			ArrayList<String> maxDistance=getMaxDistance(LandmarkIndex, Queryvertexes.get(1));
+			System.out.println("maxDistance " +maxDistance.get(1)  + " Landmark " + maxDistance.get(0) + " Destination " + maxDistance.get(2));
 			
-			int VisitedDjstra = DijkstraShortestPathJGrapht(graph, Queryvertexes.get(0), Queryvertexes.get(1));
+			int VisitedDjstra = DijkstraShortestPathJGrapht(Queryvertexes.get(0), Queryvertexes.get(1));
 			System.out.println("Visited Dijkstra "  + VisitedDjstra);
 			
-			if (Double.isInfinite(VisitedDjstra))
-				VisitedDjstra=10000;
-			if (VisitedDjstra<6500)
+			//if (VisitedDjstra<4500)
 			{
 			
-				traverseGraph(graph,Queryvertexes.get(0), Queryvertexes.get(1), maxDistance.get(0), Double.parseDouble(maxDistance.get(1)));
-				System.out.println("Visited "  + VisitedList.size() );
+				traverseGraph(Queryvertexes.get(0), Queryvertexes.get(1), maxDistance.get(0), Double.parseDouble(maxDistance.get(1)),Double.parseDouble(maxDistance.get(2)));
+				//System.out.println("Visited "  + VisitedList);
+				System.out.println("Visited "  + (VisitedList.size() - 1));
 				System.out.println("Pruned "  + pruned.size() );
 				
 				ToPrint[i][0]=VertexToQuery.get(0).get(i);
 				ToPrint[i][1]=VertexToQuery.get(1).get(i);
 				ToPrint[i][2]=Integer.toString(VisitedDjstra);
-				ToPrint[i][3]=Integer.toString(VisitedList.size());
+				ToPrint[i][3]=Integer.toString(VisitedList.size()-1);
 				ToPrint[i][4]=Integer.toString(pruned.size());
 			
 			}
@@ -129,20 +139,21 @@ public class RunQueryOnIndex {
 	public static ArrayList<ArrayList<String>> LoadIndex(ReadIndex Index, ArrayList<String> Destination)
 	{
 		indexContent = Index.ReadRow();
-			
+		Iterator<String> iter = indexContent.keySet().iterator();
 		ArrayList<ArrayList<String>> FilterContent= new ArrayList<ArrayList<String>>();
-		for (int i=0; i < indexContent.size();i++)
+		while(iter.hasNext())
 		{
+			String key = iter.next();
+			TreeMap<String, ArrayList<String>> Landmark = indexContent.get(key);
+
 			for (int j=0; j < Destination.size(); j++)
 			{
-				if (Destination.get(j).equals(indexContent.get(i).get(1)) )
-				{
-					FilterContent.add(indexContent.get(i));
-					
-				}
+				String Dest=Destination.get(j).toString();
+				ArrayList<String> filtercontent = Landmark.get(Dest);
+				FilterContent.add(filtercontent);
 			}
-			
 		}
+		
 		return FilterContent;
 		
 	}
@@ -154,41 +165,41 @@ public class RunQueryOnIndex {
 			indexContent = Index.ReadRow();
 			
 		}
-		double DistToLanmark=0;
-		for (int i=0; i < indexContent.size();i++)
-		{
-
-			if (CurrentVertex.equals(indexContent.get(i).get(1)) && LandmarkToUse.equals(indexContent.get(i).get(0)))
-			{
-				DistToLanmark=Double.parseDouble(indexContent.get(i).get(2));
-					
-				break; 
-			}
-
-			
-		}
+		double DistToLanmark=Double.POSITIVE_INFINITY;
+		
+		TreeMap<String, ArrayList<String>> Landmark= indexContent.get(LandmarkToUse);
+		DistToLanmark = Double.parseDouble(Landmark.get(CurrentVertex).get(2));
+		
+	
 		return DistToLanmark;
 		
 	}
 	
-	public static ArrayList<String> getMaxDistance(ListenableUndirectedGraph<String, DefaultEdge> graph,ArrayList<ArrayList<String>> indexContent, String Start, String End)
+	public static ArrayList<String> getMaxDistance(ArrayList<ArrayList<String>> indexContent, String Destination)
 	{
 		double maxDistance=0; 
-		double lastDistance=Double.POSITIVE_INFINITY;;
+		double lastDistance=Double.POSITIVE_INFINITY;
+		double destinationDist=0;
 		ArrayList<String> MaxDistance = new ArrayList<String>();
 		String Landmark="";
 		for(int i =0 ; i < indexContent.size(); i+=2)
 		{
 
 			maxDistance= Double.parseDouble(indexContent.get(i).get(2)) + Double.parseDouble(indexContent.get(i+1).get(2));
-			if (maxDistance<lastDistance)
+			if (maxDistance<=lastDistance)
 			{
 				lastDistance=maxDistance;
 				Landmark=indexContent.get(i).get(0);
 			}
+			if (Destination.equals(indexContent.get(i).get(1) ) )
+				destinationDist=Double.parseDouble(indexContent.get(i).get(2));
+			else if (Destination.equals(indexContent.get(i+1).get(1) ))
+				destinationDist=Double.parseDouble(indexContent.get(i+1).get(2));
+				
 		}
 		MaxDistance.add(Landmark);
 		MaxDistance.add(Double.toString(lastDistance));
+		MaxDistance.add(Double.toString(destinationDist));
 		return MaxDistance;
 	}
 		
@@ -215,33 +226,36 @@ public class RunQueryOnIndex {
 	//static LinkedHashMap<String,String> VertexToCheck = new LinkedHashMap<String,String>();
 	
 	
-	private static void traverseGraph(ListenableUndirectedGraph<String, DefaultEdge> graph,String Start,  String End, String Landmark, double maxDistance)
+	private static void traverseGraph(String Start,  String End, String Landmark, double maxDistance, double destDistance )
 	{
 		//the vertex that discovered path is stored in values...actual vertex is on keyset
-		ClosestFirstIterator<String, DefaultEdge> iter =   new ClosestFirstIterator<String, DefaultEdge>(graph, Start, 1);
+		ClosestFirstIterator<String,  DefaultWeightedEdge> iter =   new ClosestFirstIterator<String,  DefaultWeightedEdge>(graph, Start);
 		int i =0;
 		double DistToLandmark =0;
+		double maxTreshold=0;
 		String EndVertex="";
 
 		if (lastVisited.equals(Start) || lastVisited.isEmpty()==true)
 		{
-			distance++;
+			//distance++;
 			visitedFound=true;
 		}
 		else
 			visitedFound=false;
 		
-		//only increment went all closest are processed	
+	
+		
+		//only increment when all closest are processed	
 		while (iter.hasNext()) {
 			 String neighbor = iter.next();
-			 
-			 //System.out.println( i + " " + neighbor + " " + distance + " " + lastVisited); 
+			 //System.out.println("shortest path " + i + neighbor );
+			 distance=(int)  iter.getShortestPathLength(neighbor);
+	
 			 VisitedList Visited = new VisitedList(neighbor, Start, distance);	
 
 			 if (neighbor.equals(End)) {
 				 EndVertex=neighbor; 				 
 				 VisitedList.add(Visited);
-				 //System.out.println("Closest vertex " + VisitedList  );
 				 return;
 			 }
 			 
@@ -250,10 +264,20 @@ public class RunQueryOnIndex {
 			 {						
 		
 			 	DistToLandmark =GetDistToLandmark(Index,neighbor,Landmark);
-			 	if (DistToLandmark+distance>maxDistance)
+			 	Visited.setDistaceToLandmark(DistToLandmark);
+				maxTreshold=maxDistance + destDistance;
+			 	//if current node has infinity path, whole path is infinity
+			 	if (DistToLandmark==Double.POSITIVE_INFINITY || maxTreshold==Double.POSITIVE_INFINITY)
+			 		return;		 
+			
+			 	if (DistToLandmark+distance>maxTreshold)
 			 	{
+			 		
 			 		if (!seen.contains(neighbor))
+			 		{
+			 			//System.out.println("pruned " + neighbor + " Distan " +  DistToLandmark  + " currDistance " +distance );
 			 			pruned.add(neighbor);
+			 		}
 			 		seen.add(neighbor);
 			 		i++;
 			 		
@@ -263,8 +287,9 @@ public class RunQueryOnIndex {
 
 				 if (seen.contains(neighbor)==false)
 				 {				 			
-				 			
-				 	VisitedList.add(Visited);			
+					//System.out.println( i + " " + neighbor + " " + distance + " " + lastVisited + " " +DistToLandmark);
+					VisitedList.add(Visited);
+				
 				 	if (visitedFound==true)
 				 	{
 				 		lastVisited=neighbor;
@@ -272,38 +297,40 @@ public class RunQueryOnIndex {
 				 	}
 
 				 }
+					 
 						
 			 }
+			 else if(seen.isEmpty())
+				 VisitedList.add(Visited);
+
 			 	
 			 seen.add(neighbor);
 			 i++;
 			
 		}	
 		position++;
-		
 		if (EndVertex.isEmpty())
 		{	
-			//System.out.println("pos " + position  );
 			String value ="";
 			value= VisitedList.get(position).getName();
-					
-			traverseGraph(graph,value,End, Landmark, maxDistance );
+			//System.out.println("pos " + position + " value " + value + " distance " + VisitedList.get(position).getDistancefromStart()  );				
+	
+			traverseGraph(value,End, Landmark, maxDistance, destDistance );
 		}
 		
 		return;
 
 	}
 
-	
-	public static int DijkstraShortestPathJGrapht(ListenableUndirectedGraph<String, DefaultEdge> graph, String Start, String End)
+	public static int DijkstraShortestPathJGrapht(String Start, String End)
 	{
-		 ClosestFirstIterator<String, DefaultEdge> iter =
-		            new ClosestFirstIterator<String, DefaultEdge>(graph, Start);
+		 ClosestFirstIterator<String,  DefaultWeightedEdge> iter =
+		            new ClosestFirstIterator<String,  DefaultWeightedEdge>(graph, Start);
 		 		int i =0;
 		        while (iter.hasNext()) {
 		        	String vertex = iter.next();
 		        
-		        	//System.out.println( i + " " + vertex);
+		        	//System.out.println( i + " Dij " + vertex );
 		            if (vertex.equals(End)) {
 		                createEdgeList(graph, iter, Start, End);
 		                return i;
@@ -312,18 +339,18 @@ public class RunQueryOnIndex {
 		        }
 				return i;
 	}
-	 private static void createEdgeList(Graph<String, DefaultEdge> graph,
-		        ClosestFirstIterator<String, DefaultEdge> iter,
+	 private static void createEdgeList(Graph<String,  DefaultWeightedEdge> graph,
+		        ClosestFirstIterator<String,  DefaultWeightedEdge> iter,
 		        String startVertex,
 		        String endVertex) {
 		 
-		 		GraphPath<String, DefaultEdge> path;
-		        List<DefaultEdge> edgeList = new ArrayList<DefaultEdge>();
+		 		GraphPath<String,  DefaultWeightedEdge> path;
+		        List< DefaultWeightedEdge> edgeList = new ArrayList< DefaultWeightedEdge>();
 
 		        String v = endVertex;
 
 		        while (true) {
-		        	DefaultEdge edge = iter.getSpanningTreeEdge(v);
+		        	 DefaultWeightedEdge edge = iter.getSpanningTreeEdge(v);
 
 		            if (edge == null) {
 		                break;
@@ -336,7 +363,7 @@ public class RunQueryOnIndex {
 		        Collections.reverse(edgeList);
 		        double pathLength = iter.getShortestPathLength(endVertex);
 		        path =
-		            new GraphPathImpl<String, DefaultEdge>(
+		            new GraphPathImpl<String,  DefaultWeightedEdge>(
 		                graph,
 		                startVertex,
 		                endVertex,
@@ -350,3 +377,4 @@ public class RunQueryOnIndex {
 	
 
 }
+

@@ -54,7 +54,7 @@ public class MySaxParser extends DefaultHandler {
         } catch (ParserConfigurationException e) {
             System.out.println("ParserConfig error");
         } catch (SAXException e) {
-            System.out.println("SAXException : xml not well formed");
+            System.out.println("SAXException : xml not well formed" + KeggXmlFileName );
         } catch (IOException e) {
             System.out.println("IO error");
         }
@@ -69,7 +69,9 @@ public class MySaxParser extends DefaultHandler {
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
 
+    
     	if (elementName.equalsIgnoreCase("entry")) {
+    	
             entryTmp = new Kegg_Entry();
             entryTmp.setID(attributes.getValue("id"));
             entryTmp.setName(attributes.getValue("name"));
@@ -99,6 +101,7 @@ public class MySaxParser extends DefaultHandler {
         	relationTmp.setEntry1(attributes.getValue("entry1"));
         	relationTmp.setEntry2(attributes.getValue("entry2"));
         	relationTmp.setType(attributes.getValue("type"));
+        	relationTmp.setWeight(Integer.parseInt(attributes.getValue("weight")));
         }
         if(elementName.equalsIgnoreCase("subtype")){
            subtypeTmp = new Subtype(attributes.getValue("name"), attributes.getValue("value"));

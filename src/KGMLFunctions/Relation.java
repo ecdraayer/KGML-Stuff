@@ -15,6 +15,7 @@ public class Relation {
     String entry1;
     String entry2;
     String type;
+    int weight;
     ArrayList<Subtype> subtypes;
     
     //constructor
@@ -23,9 +24,13 @@ public class Relation {
     	entry1 = null;
     	entry2 = null;
     	type = null;
+    	weight=0;
     }
     
     //getters and setters
+    public int getWeight() {
+		return weight;
+	}
 	public String getEntry1() {
 		return entry1;
 	}
@@ -37,6 +42,9 @@ public class Relation {
 	}
 	public void setEntry2(String entry2) {
 		this.entry2 = entry2;
+	}
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 	public String getType() {
 		return type;

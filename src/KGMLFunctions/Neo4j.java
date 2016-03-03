@@ -6,52 +6,34 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.Hashtable;
-
 import javax.management.ObjectName;
-
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
+import org.neo4j.graphalgo.WeightedPath;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.PathExpanders;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.helpers.collection.IteratorUtil;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.tooling.GlobalGraphOperations;
 
-import com.sun.javafx.logging.JFRInputEvent;
-
-import org.neo4j.io.pagecache.PageSwapper;
-import org.neo4j.io.pagecache.tracing.DefaultPageCacheTracer;
-import org.neo4j.io.pagecache.tracing.EvictionRunEvent;
-import org.neo4j.io.pagecache.tracing.MajorFlushEvent;
-import org.neo4j.io.pagecache.tracing.PageCacheTracer;
-import org.neo4j.io.pagecache.tracing.PinEvent;
 import org.neo4j.jmx.JmxUtils;
-import org.neo4j.kernel.impl.util.JobScheduler;
-import org.neo4j.kernel.monitoring.Monitors;
-import org.neo4j.kernel.monitoring.tracing.DefaultTracerFactory;
-import org.neo4j.kernel.monitoring.tracing.TracerFactory;
-import org.neo4j.kernel.monitoring.tracing.Tracers;
-
-
 public class Neo4j 
 {
     private static final String DB_PATH = "neo4j/data/graph.db";
-
-	private static TracerFactory foundFactory; 
-	private static PageCacheTracer pageCacheTracer;
     
-    // START SNIPPET: vars
+    static // START SNIPPET: vars
     GraphDatabaseService graphDb;
     Node nodes[];
 	Node firstNode;
@@ -60,7 +42,7 @@ public class Neo4j
     // END SNIPPET: vars
 
     // START SNIPPET: createReltype
-    private static enum RelTypes implements RelationshipType
+    public static enum RelTypes implements RelationshipType
     {
         CONNECTED
     }
@@ -76,7 +58,7 @@ public class Neo4j
     	String OutputFile = "";
     	String ReferenceFile = "";
     	int j = 0;
-    	
+    	Neo4j Database = new Neo4j();
     	try {	
     		if (args.length >= 3)
     		{
@@ -109,23 +91,24 @@ public class Neo4j
     		
 
             OutputFile = "PathData.csv";
-            ReferenceFile = "BacteriaOutputConnectedNeo4j-yifan.csv";
     		//Find shortest paths from database
 
-    		Neo4j Database = new Neo4j();
+    	
     		Database.deleteDB();
     		Database.startDb(); //Create Database
     		Database.loadCSV(NodesFile, EdgesFile);
     	   
-    		//Database.ShortestPath(ReferenceFile, OutputFile); //Find shortestPaths, given a reference file
+    		Database.ShortestPath(ReferenceFile, OutputFile); //Find shortestPaths, given a reference file
     	    Database.shutDown();
 
     	} catch(Exception e){
     		System.err.println("Error with command line " + e.toString());
+    		Database.shutDown();
     	}
     }
     
-    /*--------------------------------------------------------------------------
+    @SuppressWarnings("deprecation")
+	/*--------------------------------------------------------------------------
      * Shortest Path Function - Finds the shortest path between two nodes and fills a csv file with related data
      * Input: Reference File - csv file that contains the Nodes that will be used for calculations
      * Output: OutputFile - csv file that the information will be printed on
@@ -150,38 +133,45 @@ public class Neo4j
                   String s2 = names[1];         //Get Name of second Node (KEGG ENTRY) from reference file
     		      writer.append(s1 + "," + s2); //Write Nodes to output File
 
-    	  	      int a = findIndex(s1); 
-    		      int b = findIndex(s2);
-    		   
+    		      Node Source, Destination; 
+    		      //if array nodes is filled no need to query DB.
+    		  
+    		    	  int a = findIndex(s1); 
+    		    	  int b = findIndex(s2);
+    		    	  Source=nodes[a];
+    		    	  Destination= nodes[b];
+
     		      //This Hashtable is used to determine the number of unique pathways that were crossed in the shortest pathway algorithm
 	              Hashtable<String, String> Pways = new Hashtable<String, String>();
 
 	              //Setup for Shortest Path Neo4j function
     		      PathFinder<org.neo4j.graphdb.Path> finder = GraphAlgoFactory.shortestPath(
     	          PathExpanders.forTypeAndDirection( RelTypes.CONNECTED, Direction.OUTGOING ), 20 );        
-    		     
+
     		      double startTime = System.nanoTime(); //Start Timer
-    		      org.neo4j.graphdb.Path paths = finder.findSinglePath( nodes[a], nodes[b] ); //Call Neo4j shortest path function
+    		      Path paths = finder.findSinglePath( Source, Destination ); //Call Neo4j shortest path function
     		      double endTime = System.nanoTime();   //End Timer
     		
     		      double duration = (endTime - startTime) / 1000000.0; //Find duration and conver to milliseconds
     		      int EdgeCount = 0; //Number of edges in pathway
     		      int PCount = 0;    //Number of different pathways crossed for shortest pathway
     	          
-    		      //Go through calculated path
-    		      for ( Node node : paths.nodes()) {
-    	             EdgeCount++; //count edges
-    	             //Put pathways into hashtable
-    	             Pways.put((String)node.getProperty("PathwayID"), (String)node.getProperty("PathwayID"));
-    	          }    	
-    		      //The number of Unique pathways will be the number of entries in Hashtable
-    	          PCount = Pways.size();
-    	          
-    	          //Write Data to Output File
-    	          writer.append("," + (EdgeCount-1) + "," + PCount + ",");
-    	          for ( Node node : paths.nodes()) {
-    	             writer.append("(" + node.getProperty("name") + ") " );
-    	          }
+    	
+	    		      //Go through calculated path
+	    		      for ( Node node : paths.nodes()) {
+	    	             EdgeCount++; //count edges
+	    	             //Put pathways into hashtable
+	    	             Pways.put((String)node.getProperty("PathwayID"), (String)node.getProperty("PathwayID"));
+	    	          }    	
+	    		      //The number of Unique pathways will be the number of entries in Hashtable
+	    	          PCount = Pways.size();
+	    	          
+	    	          //Write Data to Output File
+	    	          writer.append("," + (EdgeCount-1) + "," + PCount + ",");
+	    	          for ( Node node : paths.nodes()) {
+	    	             writer.append("(" + node.getProperty("name") + ") " );
+	    	          }
+    		   
     	          writer.append("," + duration + "\n");
                } //end while
                
@@ -211,7 +201,7 @@ public class Neo4j
      * Input: String NodesFile - csv file containing all the Nodes needed to make the database
      *        String EdgesFile - csv file containing all the edges information needed to make the database
      *--------------------------------------------------------------------------*/
-    public void deleteDB()
+    private void deleteDB()
     {
     	try {
 			FileUtils.deleteRecursively( new File( DB_PATH ) );
@@ -221,34 +211,32 @@ public class Neo4j
 		}
     }
 
-    private static String getStartTimeFromManagementBean(GraphDatabaseService graphDbService )
+    private Long getFromManagementBean(String Object, String Attribuite )
     {
-        ObjectName objectName = JmxUtils.getObjectName( graphDbService, "Configuration" );
-        String date = JmxUtils.getAttribute( objectName, "store_dir" );
-    
-        //final Class<JobScheduler> jobScheduler =  JobScheduler.class;
-        //final Monitors monitors = new Monitors();
-
-        System.out.println(pageCacheTracer.toString());
-        return date;
+        ObjectName objectName = JmxUtils.getObjectName( graphDb, Object);
+        Long value = JmxUtils.getAttribute( objectName, Attribuite );
+        
+        return value;
     }
-    void startDb() throws IOException
+    @SuppressWarnings("deprecation")
+	public GraphDatabaseService startDb() throws IOException
     {
     	
         // START SNIPPET: startDb
         
         //graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
-        graphDb = new GraphDatabaseFactory()
+    	graphDb = new GraphDatabaseFactory()
         	    .newEmbeddedDatabaseBuilder(DB_PATH )
-        	    .setConfig( GraphDatabaseSettings.pagecache_memory, "512K" )        	    
+        	    .loadPropertiesFromFile("neo4j/conf/neo4j.properties")   
         	    .newGraphDatabase();
+
+    			
         registerShutdownHook( graphDb );
-        // END SNIPPET: startDb
-        foundFactory = new DefaultTracerFactory();
-        DefaultPageCacheTracer.enablePinUnpinTracing();
-        pageCacheTracer = foundFactory.createPageCacheTracer( );
-   
-       
+        // END SNIPPET: startDb   
+ 
+
+        System.out.println("before " + getFromManagementBean("Page cache", "Faults"));
+    	
         try ( Transaction tx = graphDb.beginTx() )
         {
 			int nodeCount = IteratorUtil.count(GlobalGraphOperations.at(graphDb).getAllNodes());
@@ -256,13 +244,16 @@ public class Neo4j
 		
 			System.out.println("Nodes " + nodeCount);
 			System.out.println("Edges " + edgeCount);
-			System.out.println("Edges " + getStartTimeFromManagementBean(graphDb));
-	
+			
+			System.out.println("Size on disk " + getFromManagementBean("Store file sizes", "TotalStoreSize"));
+			System.out.println("after " + getFromManagementBean("Page cache", "Faults"));
+		    	
 			tx.success();
         }
+        return graphDb;
 	
     }
-    
+
     void loadCSV(String NodesFile, String EdgesFile)
     {
 		// START SNIPPET: For reading the given csv file
@@ -286,7 +277,8 @@ public class Neo4j
 				while ((line = br.readLine()) != null) {
 	
 	        	   String[] Entry = line.split(cvsSplitBy);
-	        	   
+	      
+
 	               nodes[i] = graphDb.createNode();
 	               Label myLabel = DynamicLabel.label("Nodes");
 	              
@@ -297,7 +289,7 @@ public class Neo4j
 	               nodes[i].setProperty( "reaction", Entry[2]);  //Type of reaction Kegg entry is
 	               nodes[i].setProperty( "PathwayID", Entry[3]); //Pathway the Kegg entry belongs to
 	              
-	               
+	     
 				   i++;
 				}
 	            
@@ -360,7 +352,7 @@ public class Neo4j
         }
     }
 
-    void shutDown()
+    public void shutDown()
     {
         System.out.println();
         System.out.println( "Shutting down database ..." );

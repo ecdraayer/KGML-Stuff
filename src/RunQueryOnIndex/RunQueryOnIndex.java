@@ -12,17 +12,18 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
 import org.jgrapht.ListenableGraph;
-import org.jgrapht.alg.DijkstraShortestPath;
+
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.GraphPathImpl;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 import org.jgrapht.graph.ListenableUndirectedGraph;
-//import org.jgrapht.traverse.ClosestFirstIterator;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import BuildIndex.BuildIndex;
+import JGraphTAlgorithms.ClosestFirstIterator;
+import JGraphTAlgorithms.DijkstraShortestPath;
 import KOExtraction.ExportCsv;
 import KOSearch.ReadCSV;
 import TransformToGraph.TransformToGraph;
@@ -86,8 +87,8 @@ public class RunQueryOnIndex {
 			
 			ArrayList<String> maxDistance=getMaxDistance(LandmarkIndex, Queryvertexes.get(1));
 			System.out.println("maxDistance " +maxDistance.get(1)  + " Landmark " + maxDistance.get(0) + " Destination " + maxDistance.get(2));
-			
-			int VisitedDjstra = DijkstraShortestPathJGrapht(Queryvertexes.get(0), Queryvertexes.get(1));
+	
+			int VisitedDjstra = DijkstraShortestPath.DijkstraShortestPathJGrapht(Queryvertexes.get(0), Queryvertexes.get(1), graph);
 			System.out.println("Visited Dijkstra "  + VisitedDjstra);
 			
 			//if (VisitedDjstra<4500)
@@ -322,57 +323,7 @@ public class RunQueryOnIndex {
 
 	}
 
-	public static int DijkstraShortestPathJGrapht(String Start, String End)
-	{
-		 ClosestFirstIterator<String,  DefaultWeightedEdge> iter =
-		            new ClosestFirstIterator<String,  DefaultWeightedEdge>(graph, Start);
-		 		int i =0;
-		        while (iter.hasNext()) {
-		        	String vertex = iter.next();
-		        
-		        	//System.out.println( i + " Dij " + vertex );
-		            if (vertex.equals(End)) {
-		                createEdgeList(graph, iter, Start, End);
-		                return i;
-		            }
-		            i++;
-		        }
-				return i;
-	}
-	 private static void createEdgeList(Graph<String,  DefaultWeightedEdge> graph,
-		        ClosestFirstIterator<String,  DefaultWeightedEdge> iter,
-		        String startVertex,
-		        String endVertex) {
-		 
-		 		GraphPath<String,  DefaultWeightedEdge> path;
-		        List< DefaultWeightedEdge> edgeList = new ArrayList< DefaultWeightedEdge>();
-
-		        String v = endVertex;
-
-		        while (true) {
-		        	 DefaultWeightedEdge edge = iter.getSpanningTreeEdge(v);
-
-		            if (edge == null) {
-		                break;
-		            }
-
-		            edgeList.add(edge);
-		            v = Graphs.getOppositeVertex(graph, edge, v);
-		        }
-
-		        Collections.reverse(edgeList);
-		        double pathLength = iter.getShortestPathLength(endVertex);
-		        path =
-		            new GraphPathImpl<String,  DefaultWeightedEdge>(
-		                graph,
-		                startVertex,
-		                endVertex,
-		                edgeList,
-		                pathLength);
-		        
-		     	//System.out.println("Jgrapht path " +path);
-		    }
-	 
+	
 	
 	
 

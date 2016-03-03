@@ -14,29 +14,33 @@ Table of Contents
 
     Important
 
-    This section describes upgrading a single Neo4j instance. Upgrading a Neo4j
-    HA cluster (Neo4j Enterprise) requires a very specific process be followed.
-    Please see Upgrade of a Neo4j HA Cluster at
-    <http://neo4j.com/docs/2.2.5/ha-upgrade-guide.html> .
-
-A database created by an older version of Neo4j will be upgraded during startup 
-when opened by Neo4j 2.2.5. While this upgrade will occur automatically for 
-minor changes, larger migrations require explicit configuration before Neo4j 
-will start.
+    This section describes upgrading a single Neo4j instance. To upgrade a
+    Neo4j HA cluster (Neo4j Enterprise) a very specific procedure must be
+    followed. Please see Upgrade of a Neo4j HA Cluster at
+    <http://neo4j.com/docs/2.3.2/ha-upgrade-guide.html> .
 
 Each Neo4j version supports upgrading from a limited number of previous 
 versions. These upgrades are either automatic, or require explicit 
-configuration to allow them.
+configuration to allow them. Upgrades between patch releases within the same 
+minor version are automatic. Upgrading to the latest patch release is 
+recommended before upgrading to new major or minor versions.
 
-In this release of Neo4j, the following upgrades are permitted.
+A database created by an older version of Neo4j will be upgraded during startup 
+when opened by the target version of Neo4j.
 
-1.9.x --> 2.2.5
+The following Neo4j versions, where x stands for the latest patch release, can 
+be upgraded to Neo4j 2.3.2:
+
+1.9.x --> 2.3.2
     Explicit configuration is required
 
-2.0.x --> 2.2.5
+2.0.x --> 2.3.2
     Explicit configuration is required
 
-2.1.x --> 2.2.5
+2.1.x --> 2.3.2
+    Explicit configuration is required
+
+2.2.x --> 2.3.2
     Explicit configuration is required
 
 
@@ -54,10 +58,10 @@ In this release of Neo4j, the following upgrades are permitted.
 
 ----------------------------------------------------------------------------
 
-To perform a normal store upgrade (for minor changes to the database store):
+To perform an automatic store upgrade:
 
    1. Cleanly shut down the older version of Neo4j, if it is running.
-   2. Install Neo4j 2.2.5, and set it up to use the same database store
+   2. Install Neo4j 2.3.2, and set it up to use the same database store
       directory (typically data/graph.db).
    3. Make a copy of the database.
 
@@ -68,7 +72,7 @@ To perform a normal store upgrade (for minor changes to the database store):
           at this time, to use as a backup in case rollback/downgrade is
           required. This is not necessary if a backup has been made using the
           online backup tool (see
-          <http://neo4j.com/docs/2.2.5/operations-backup.html> ), available
+          <http://neo4j.com/docs/2.3.2/operations-backup.html> ), available
           with Neo4j Enterprise.
 
    4. Start up Neo4j.
@@ -80,10 +84,9 @@ To perform a normal store upgrade (for minor changes to the database store):
 
 ----------------------------------------------------------------------------
 
-To perform an explicit store upgrade (required for significant changes to the 
-database store):
+To perform an explicit store upgrade:
 
-   1. Install Neo4j 2.2.5, and set it up to use the same database store
+   1. Install Neo4j 2.3.2, and set it up to use the same database store
       directory (typically data/graph.db).
    2. Cleanly shut down the older version of Neo4j, if it is running.
    3. Set the Neo4j configuration parameter allow_store_upgrade=true in your 
@@ -97,7 +100,7 @@ database store):
       the messages.log file, inside the database store directory.
 
 
-    Caution
+    Disk space requirements
 
     An explicit upgrade will require substantial free disk space, as it must
     make an entire copy of the database store. The upgraded store version may
@@ -106,12 +109,11 @@ database store):
     store.
 
 
-    Note
+    Cypher compatibility
 
-    Cypher compatibility: The Cypher language is rapidly evolving, and may
-    change between Neo4j versions (although not between patch releases).
-    However, Neo4j supports compatibility directives for Cypher, that allow
-    explicitly selecting a language version. This is possible to do for
+    The Cypher language is rapidly evolving, and may change between Neo4j
+    versions. However, Neo4j supports compatibility directives for Cypher, that
+    allow explicitly selecting a language version. This is possible to do for
     individual statements, or globally, as described in the Cypher
-    Compatibility section at see
-    <http://neo4j.com/docs/2.2.5/cypher-compatibility.html> .
+    Compatibility section at
+    <http://neo4j.com/docs/2.3.2/cypher-compatibility.html> .

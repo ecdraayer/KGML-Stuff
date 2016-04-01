@@ -10,7 +10,7 @@
         <jar destfile="${dir.jarfile}/kgml.jar">
             <manifest>
                 <attribute name="Main-Class" value="KOSearch.KOSearch"/>
-                <attribute name="Class-Path" value=". kgml_lib/selenium-server-standalone-2.46.0.jar kgml_lib/jgraph-5.13.0.0.jar kgml_lib/jgrapht-core-0.9.1.jar kgml_lib/jgrapht-ext-0.9.1.jar kgml_lib/jgrapht-ext-0.9.1-uber.jar kgml_lib/jgraphx-2.0.0.1.jar kgml_lib/javax.mail.jar"/>
+                <attribute name="Class-Path" value=". kgml_lib/selenium-server-standalone-2.46.0.jar kgml_lib/jgraph-5.13.0.0.jar kgml_lib/jgrapht-core-0.9.1.jar kgml_lib/jgrapht-ext-0.9.1.jar kgml_lib/jgrapht-ext-0.9.1-uber.jar kgml_lib/jgraphx-2.0.0.1.jar kgml_lib/javax.mail.jar kgml_lib/lucene-core-3.6.2.jar kgml_lib/opencsv-2.3.jar kgml_lib/parboiled-core-1.1.7.jar kgml_lib/commons-lang3-3.3.2.jar kgml_lib/concurrentlinkedhashmap-lru-1.4.2.jar kgml_lib/gmetric4j-1.0.7.jar kgml_lib/jline-2.12.jar kgml_lib/metrics-core-3.1.2.jar kgml_lib/metrics-ganglia-3.1.2.jar kgml_lib/metrics-graphite-3.1.2.jar kgml_lib/neo4j-backup-2.3.2.jar kgml_lib/neo4j-cluster-2.3.2.jar kgml_lib/neo4j-codegen-2.3.2.jar kgml_lib/neo4j-com-2.3.2.jar kgml_lib/neo4j-consistency-check-2.3.2.jar kgml_lib/neo4j-consistency-check-legacy-2.3.2.jar kgml_lib/neo4j-csv-2.3.2.jar kgml_lib/neo4j-cypher-2.3.2.jar kgml_lib/neo4j-cypher-compiler-1.9_2.11-2.0.5.jar kgml_lib/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar kgml_lib/neo4j-cypher-compiler-2.3-2.3.2.jar kgml_lib/neo4j-cypher-frontend-2.3-2.3.2.jar kgml_lib/neo4j-enterprise-kernel-2.3.2.jar kgml_lib/neo4j-function-2.3.2.jar kgml_lib/neo4j-graph-algo-2.3.2.jar kgml_lib/neo4j-graph-matching-2.3.2.jar kgml_lib/neo4j-ha-2.3.2.jar kgml_lib/neo4j-import-tool-2.3.2.jar kgml_lib/neo4j-io-2.3.2.jar kgml_lib/neo4j-jmx-2.3.2.jar kgml_lib/neo4j-kernel-2.3.2.jar kgml_lib/neo4j-logging-2.3.2.jar kgml_lib/neo4j-lucene-index-2.3.2.jar kgml_lib/neo4j-management-2.3.2.jar kgml_lib/neo4j-metrics-2.3.2.jar kgml_lib/neo4j-primitive-collections-2.3.2.jar kgml_lib/neo4j-query-logging-2.3.2.jar kgml_lib/neo4j-shell-2.3.2.jar kgml_lib/neo4j-udc-2.3.2.jar kgml_lib/neo4j-unsafe-2.3.2.jar kgml_lib/netty-3.6.3.Final.jar kgml_lib/oncrpc-1.0.7.jar kgml_lib/parboiled-scala_2.11-1.1.7.jar kgml_lib/scala-library-2.11.7.jar kgml_lib/scala-parser-combinators_2.11-1.0.4.jar kgml_lib/scala-reflect-2.11.7.jar kgml_lib/server-api-2.3.2.jar kgml_lib/slf4j-api-1.7.6.jar"/>
             </manifest>
             <fileset dir="${dir.jarfile}/bin"/>
         </jar>
@@ -23,5 +23,53 @@
         <copy file="${dir.jarfile}/lib/jgrapht-ext-0.9.1-uber.jar" todir="${dir.jarfile}/kgml_lib"/>
         <copy file="${dir.jarfile}/lib/jgraphx-2.0.0.1.jar" todir="${dir.jarfile}/kgml_lib"/>
         <copy file="${dir.jarfile}/lib/javax.mail.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/lucene-core-3.6.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/opencsv-2.3.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/parboiled-core-1.1.7.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/commons-lang3-3.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/concurrentlinkedhashmap-lru-1.4.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/gmetric4j-1.0.7.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/jline-2.12.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/metrics-core-3.1.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/metrics-ganglia-3.1.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/metrics-graphite-3.1.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-backup-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-cluster-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-codegen-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-com-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-consistency-check-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-consistency-check-legacy-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-csv-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-cypher-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-cypher-compiler-1.9_2.11-2.0.5.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-cypher-compiler-2.3-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-cypher-frontend-2.3-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-enterprise-kernel-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-function-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-graph-algo-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-graph-matching-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-ha-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-import-tool-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-io-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-jmx-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-kernel-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-logging-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-lucene-index-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-management-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-metrics-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-primitive-collections-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-query-logging-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-shell-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-udc-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/neo4j-unsafe-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/netty-3.6.3.Final.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/oncrpc-1.0.7.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/parboiled-scala_2.11-1.1.7.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/scala-library-2.11.7.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/scala-parser-combinators_2.11-1.0.4.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/scala-reflect-2.11.7.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/server-api-2.3.2.jar" todir="${dir.jarfile}/kgml_lib"/>
+        <copy file="${dir.jarfile}/neo4j/lib/slf4j-api-1.7.6.jar" todir="${dir.jarfile}/kgml_lib"/>
     </target>
 </project>

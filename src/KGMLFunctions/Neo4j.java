@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import javax.management.ObjectName;
 import org.neo4j.graphalgo.GraphAlgoFactory;
+
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphalgo.WeightedPath;
 import org.neo4j.graphdb.Direction;
@@ -25,6 +26,7 @@ import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.collection.IteratorUtil;
+
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.tooling.GlobalGraphOperations;
 
@@ -146,7 +148,7 @@ public class Neo4j
 
 	              //Setup for Shortest Path Neo4j function
     		      PathFinder<org.neo4j.graphdb.Path> finder = GraphAlgoFactory.shortestPath(
-    	          PathExpanders.forTypeAndDirection( RelTypes.CONNECTED, Direction.OUTGOING ), 20 );        
+    	          PathExpanders.forTypeAndDirection( RelTypes.CONNECTED, Direction.BOTH ), 20 );        
 
     		      double startTime = System.nanoTime(); //Start Timer
     		      Path paths = finder.findSinglePath( Source, Destination ); //Call Neo4j shortest path function
@@ -156,7 +158,8 @@ public class Neo4j
     		      int EdgeCount = 0; //Number of edges in pathway
     		      int PCount = 0;    //Number of different pathways crossed for shortest pathway
     	          
-    	
+    		      if (paths != null)
+    		      {
 	    		      //Go through calculated path
 	    		      for ( Node node : paths.nodes()) {
 	    	             EdgeCount++; //count edges
@@ -171,15 +174,15 @@ public class Neo4j
 	    	          for ( Node node : paths.nodes()) {
 	    	             writer.append("(" + node.getProperty("name") + ") " );
 	    	          }
-    		   
+    		      }
     	          writer.append("," + duration + "\n");
                } //end while
                
             //error stuff
             }catch (FileNotFoundException e) {
-        		e.printStackTrace();
+            	System.err.println(e.getMessage());
         	} catch (IOException e) {
-        		e.printStackTrace();
+        		System.err.println(e.getMessage());
         	} finally {
         		writer.flush();
         		writer.close();
@@ -187,7 +190,7 @@ public class Neo4j
         			try {
         				br.close();
         			} catch (IOException e) {
-        				e.printStackTrace();
+        				System.err.println(e.getMessage());
         			}
         		}
         	}
@@ -235,7 +238,7 @@ public class Neo4j
         // END SNIPPET: startDb   
  
 
-        System.out.println("before " + getFromManagementBean("Page cache", "Faults"));
+        System.out.println("before pages" + getFromManagementBean("Page cache", "Faults"));
     	
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -246,7 +249,7 @@ public class Neo4j
 			System.out.println("Edges " + edgeCount);
 			
 			System.out.println("Size on disk " + getFromManagementBean("Store file sizes", "TotalStoreSize"));
-			System.out.println("after " + getFromManagementBean("Page cache", "Faults"));
+			System.out.println("after pages " + getFromManagementBean("Page cache", "Faults"));
 		    	
 			tx.success();
         }

@@ -6,15 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-
-import KGMLFunctions.Pathway;
 import KOExtraction.ExportCsv;
 import KOSearch.ReadCSV;
 

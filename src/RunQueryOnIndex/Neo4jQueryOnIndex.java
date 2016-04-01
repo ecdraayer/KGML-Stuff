@@ -3,6 +3,7 @@ package RunQueryOnIndex;
 import java.io.IOException;
 import org.neo4j.graphdb.GraphDatabaseService;
 import KGMLFunctions.Neo4j;
+import Neo4jAlgorithms.Neo4JShortestPath;
 
 public class Neo4jQueryOnIndex  {
 	
@@ -11,7 +12,7 @@ public class Neo4jQueryOnIndex  {
 		
 		Neo4j NeoDb = new Neo4j();
 		String OutputFile = "Neo4jPages.csv";
-		String ReferenceFile = "Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv";
+		String ReferenceFile = "Bacteria_879462.4.PATRIC/xmls/GenesToQuery.csv";
 		try {
 			GraphDatabaseService graphDb = NeoDb.startDb();
 			

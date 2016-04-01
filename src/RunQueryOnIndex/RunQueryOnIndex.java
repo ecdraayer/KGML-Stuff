@@ -2,23 +2,11 @@ package RunQueryOnIndex;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.TreeMap;
 
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.Graphs;
-import org.jgrapht.ListenableGraph;
-
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.GraphPathImpl;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
-import org.jgrapht.graph.ListenableUndirectedGraph;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import BuildIndex.BuildIndex;
@@ -35,10 +23,10 @@ public class RunQueryOnIndex {
 	 * 
 	 */
 
-	static ReadIndex Index = new ReadIndex("_idx.csv");
+
 	static TreeMap<String, TreeMap<String, ArrayList<String>>> indexContent;	
 	
-	
+	static FilterIndex Filter = new FilterIndex();
 	static ArrayList<VisitedList> VisitedList;
 	static int position = -1;
 	static HashSet<String> seen;
@@ -50,18 +38,18 @@ public class RunQueryOnIndex {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//call graph
-		ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
-		//ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls","", false);	
+		//ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = TransformToGraph.BuildGraph("","Bacteria_879462.4.PATRIC/csv", false);
+		ListenableDirectedWeightedGraph<String, WeightedEdge> Dgraph = TransformToGraph.BuildGraph("Bacteria_879462.4.PATRIC/xmls","", false);	
 		graph=BuildIndex.DirectedtoUndirected(Dgraph);
 		
 		
 		ArrayList<ArrayList<String>> VertexToQuery  = new ArrayList<ArrayList<String>>();
 		//read from genetoquery.csv		
-		ReadCSV Source= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");
-		//ReadCSV Source= new ReadCSV("GenesToQuery.csv");	
+		//ReadCSV Source= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");
+		ReadCSV Source= new ReadCSV("GenesToQuery.csv");	
 		VertexToQuery.add(Source.ReadCol(0));
-		ReadCSV Destination= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");
-		//ReadCSV Destination= new ReadCSV("GenesToQuery.csv");
+		//ReadCSV Destination= new ReadCSV("Bacteria_879462.4.PATRIC/csv/GenesToQuery.csv");
+		ReadCSV Destination= new ReadCSV("GenesToQuery.csv");
 		VertexToQuery.add(Destination.ReadCol(1));
 		
 
@@ -76,25 +64,23 @@ public class RunQueryOnIndex {
 			lastVisited="";
 			visitedFound=true;
 					
-			ArrayList<String> Queryvertexes  = new ArrayList<String>();
-			Queryvertexes.add(VertexToQuery.get(0).get(i));
-			Queryvertexes.add(VertexToQuery.get(1).get(i));
-
+			String start = VertexToQuery.get(0).get(i);
+			String end = VertexToQuery.get(1).get(i);
 			
-			System.out.println("Query: " +Queryvertexes  );
-			ArrayList<ArrayList<String>> LandmarkIndex = LoadIndex(Index, Queryvertexes);
+			System.out.println("Query: " +start+ " "+  end  );
+			ArrayList<ArrayList<String>> LandmarkIndex = Filter.LoadIndex(start, end);
 			System.out.println("Index content " +LandmarkIndex  );
 			
-			ArrayList<String> maxDistance=getMaxDistance(LandmarkIndex, Queryvertexes.get(1));
-			System.out.println("maxDistance " +maxDistance.get(1)  + " Landmark " + maxDistance.get(0) + " Destination " + maxDistance.get(2));
+			//MaxDistance maxDistance=Filter.getMaxDistance(LandmarkIndex,  end);
+			//System.out.println("maxDistance " +maxDistance.getMaxDistance()  + " Landmark " + maxDistance.getLandmark() + " Destination " + maxDistance.getDestinationDist());
 	
-			int VisitedDjstra = DijkstraShortestPath.DijkstraShortestPathJGrapht(Queryvertexes.get(0), Queryvertexes.get(1), graph);
+			int VisitedDjstra = DijkstraShortestPath.DijkstraShortestPathJGrapht(start, end, graph);
 			System.out.println("Visited Dijkstra "  + VisitedDjstra);
 			
 			//if (VisitedDjstra<4500)
 			{
 			
-				traverseGraph(Queryvertexes.get(0), Queryvertexes.get(1), maxDistance.get(0), Double.parseDouble(maxDistance.get(1)),Double.parseDouble(maxDistance.get(2)));
+				//traverseGraph(start, end, maxDistance.getLandmark(), maxDistance.getMaxDistance(),maxDistance.getDestinationDist());
 				//System.out.println("Visited "  + VisitedList);
 				System.out.println("Visited "  + (VisitedList.size() - 1));
 				System.out.println("Pruned "  + pruned.size() );
@@ -135,74 +121,6 @@ public class RunQueryOnIndex {
 			}
 			Csv.closeCSV();
 	}
-	
-	
-	public static ArrayList<ArrayList<String>> LoadIndex(ReadIndex Index, ArrayList<String> Destination)
-	{
-		indexContent = Index.ReadRow();
-		Iterator<String> iter = indexContent.keySet().iterator();
-		ArrayList<ArrayList<String>> FilterContent= new ArrayList<ArrayList<String>>();
-		while(iter.hasNext())
-		{
-			String key = iter.next();
-			TreeMap<String, ArrayList<String>> Landmark = indexContent.get(key);
-
-			for (int j=0; j < Destination.size(); j++)
-			{
-				String Dest=Destination.get(j).toString();
-				ArrayList<String> filtercontent = Landmark.get(Dest);
-				FilterContent.add(filtercontent);
-			}
-		}
-		
-		return FilterContent;
-		
-	}
-	
-	public static double GetDistToLandmark(ReadIndex Index, String CurrentVertex, String LandmarkToUse)
-	{
-		if (indexContent==null)
-		{
-			indexContent = Index.ReadRow();
-			
-		}
-		double DistToLanmark=Double.POSITIVE_INFINITY;
-		
-		TreeMap<String, ArrayList<String>> Landmark= indexContent.get(LandmarkToUse);
-		DistToLanmark = Double.parseDouble(Landmark.get(CurrentVertex).get(2));
-		
-	
-		return DistToLanmark;
-		
-	}
-	
-	public static ArrayList<String> getMaxDistance(ArrayList<ArrayList<String>> indexContent, String Destination)
-	{
-		double maxDistance=0; 
-		double lastDistance=Double.POSITIVE_INFINITY;
-		double destinationDist=0;
-		ArrayList<String> MaxDistance = new ArrayList<String>();
-		String Landmark="";
-		for(int i =0 ; i < indexContent.size(); i+=2)
-		{
-
-			maxDistance= Double.parseDouble(indexContent.get(i).get(2)) + Double.parseDouble(indexContent.get(i+1).get(2));
-			if (maxDistance<=lastDistance)
-			{
-				lastDistance=maxDistance;
-				Landmark=indexContent.get(i).get(0);
-			}
-			if (Destination.equals(indexContent.get(i).get(1) ) )
-				destinationDist=Double.parseDouble(indexContent.get(i).get(2));
-			else if (Destination.equals(indexContent.get(i+1).get(1) ))
-				destinationDist=Double.parseDouble(indexContent.get(i+1).get(2));
-				
-		}
-		MaxDistance.add(Landmark);
-		MaxDistance.add(Double.toString(lastDistance));
-		MaxDistance.add(Double.toString(destinationDist));
-		return MaxDistance;
-	}
 		
 		/*ArrayList<String> discoverer =(new ArrayList<String>(DiscoveredPaths));
 
@@ -221,10 +139,6 @@ public class RunQueryOnIndex {
 
 		System.out.println("Path " + path);
 		 }*/	
-	
-
-	
-	//static LinkedHashMap<String,String> VertexToCheck = new LinkedHashMap<String,String>();
 	
 	
 	private static void traverseGraph(String Start,  String End, String Landmark, double maxDistance, double destDistance )
@@ -264,7 +178,7 @@ public class RunQueryOnIndex {
 			 if (i>0)
 			 {						
 		
-			 	DistToLandmark =GetDistToLandmark(Index,neighbor,Landmark);
+			 	DistToLandmark =Filter.GetDistToLandmark(neighbor,Landmark);
 			 	Visited.setDistaceToLandmark(DistToLandmark);
 				maxTreshold=maxDistance + destDistance;
 			 	//if current node has infinity path, whole path is infinity

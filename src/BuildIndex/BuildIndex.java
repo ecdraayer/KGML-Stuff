@@ -3,15 +3,9 @@ package BuildIndex;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.ListenableDirectedGraph;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
-import org.jgrapht.graph.ListenableUndirectedGraph;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import KOExtraction.ExportCsv;
@@ -80,28 +74,11 @@ public class BuildIndex {
 				j++;
 			}
 		}
-		WriteIndex(Distances);
+		
+		WriteIndex write = new WriteIndex();
+		write.WriteIdx(Distances);
 		
 	}
-	 public static void WriteIndex(String[][] Distances)
-	 {
-		ExportCsv Csv = new ExportCsv("_idx.csv", false,"Landamark, Destination, Distance");
-		for (String[] s: Distances)
-		{
-			try {
-				Csv.WriteFieldCSV(s[0] ,0);
-			
-				Csv.WriteFieldCSV(s[1] ,0);
-				Csv.WriteFieldCSV(s[2] ,0);
-				Csv.WriteFieldCSV("" ,1);
-				Csv.FlushCSV();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println(e.toString());
-			}
-		}
-		Csv.closeCSV();
-		
-	 }
+	
 
 }

@@ -20,7 +20,7 @@ public class DijkstraShortestPath {
 		        while (iter.hasNext()) {
 		        	String vertex = iter.next();
 		        
-		        	//System.out.println( i + " Dij " + vertex );
+		        	System.out.println( i + " Dij " + vertex );
 		            if (vertex.equals(End)) {
 		                createEdgeList(graph, iter, Start, End);
 		                return i;
